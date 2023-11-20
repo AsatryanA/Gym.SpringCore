@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "specialization": "Fitness",
+    "userId": 10
+  },
+  {
+    "id": 2,
+    "specialization": "Yoga",
+    "userId": 6
+  },
+  {
+    "id": 3,
+    "specialization": "CrossFit",
+    "userId": 4
+  },
+  {
+    "id": 4,
+    "specialization": "Martial Arts",
+    "userId": 5
+  },
+  {
+    "id": 5,
+    "specialization": "Cardiovascular Training",
+    "userId": 2
+  },
+  {
+    "id": 6,
+    "specialization": "Weightlifting",
+    "userId": 8
+  },
+  {
+    "id": 7,
+    "specialization": "Pilates",
+    "userId": 3
+  },
+  {
+    "id": 8,
+    "specialization": "Functional Training",
+    "userId": 7
+  },
+  {
+    "id": 9,
+    "specialization": "Cycling",
+    "userId": 9
+  },
+  {
+    "id": 10,
+    "specialization": "Zumba",
+    "userId": 1
+  }
+]

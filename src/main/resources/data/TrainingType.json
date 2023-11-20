@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "Cardio"
+  },
+  {
+    "id": 2,
+    "name": "Strength Training"
+  },
+  {
+    "id": 3,
+    "name": "Yoga"
+  },
+  {
+    "id": 4,
+    "name": "Martial Arts"
+  },
+  {
+    "id": 5,
+    "name": "HIIT"
+  }
+]

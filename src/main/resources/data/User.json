@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "firstName": "John",
+    "lastName": "Doe",
+    "username": "john.doe",
+    "password": "password123",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "username": "jane.smith",
+    "password": "securepass456",
+    "isActive": true
+  },
+  {
+    "id": 3,
+    "firstName": "Robert",
+    "lastName": "Johnson",
+    "username": "robert.j",
+    "password": "pass123word",
+    "isActive": false
+  },
+  {
+    "id": 4,
+    "firstName": "Emily",
+    "lastName": "Davis",
+    "username": "emily.davis",
+    "password": "strongpass789",
+    "isActive": true
+  },
+  {
+    "id": 5,
+    "firstName": "Michael",
+    "lastName": "Anderson",
+    "username": "michael.a",
+    "password": "securepassword",
+    "isActive": true
+  },
+  {
+    "id": 6,
+    "firstName": "Sophia",
+    "lastName": "Miller",
+    "username": "sophia.m",
+    "password": "pass456word",
+    "isActive": true
+  },
+  {
+    "id": 7,
+    "firstName": "David",
+    "lastName": "Taylor",
+    "username": "david.t",
+    "password": "taylorpass789",
+    "isActive": false
+  },
+  {
+    "id": 8,
+    "firstName": "Olivia",
+    "lastName": "Clark",
+    "username": "olivia.c",
+    "password": "clarksecure123",
+    "isActive": true
+  },
+  {
+    "id": 9,
+    "firstName": "Daniel",
+    "lastName": "Brown",
+    "username": "daniel.b",
+    "password": "brownpass",
+    "isActive": true
+  },
+  {
+    "id": 10,
+    "firstName": "Ava",
+    "lastName": "Williams",
+    "username": "ava.w",
+    "password": "williams123",
+    "isActive": true
+  }
+]
