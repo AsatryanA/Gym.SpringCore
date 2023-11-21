@@ -8,7 +8,8 @@
 *.jar
 *.war
 *.ear
-
+target/
+classes/
 # Libraries
 /lib/
 /lib/*
