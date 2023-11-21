@@ -1,6 +1,5 @@
 package com.epam.gym.entity;
 
-import com.epam.gym.entity.baseEntity.BaseEntity;
 import lombok.*;
 
 
@@ -13,5 +12,6 @@ public class Trainer extends BaseEntity {
 
     String specialization;
     Long userId;
+
 }
 

@@ -5,15 +5,15 @@ import com.epam.gym.entity.User;
 import java.util.List;
 
 public interface UserDAO {
-    User createUser(User trainee);
+    User create(User trainee);
 
-    User updateUser(User trainee);
+    User update(User trainee);
 
-    void deleteUser(Long id);
+    void delete(Long id);
 
-    User getUserById(Long id);
+    User getById(Long id);
 
-    List<User> getAllUsers();
+    List<User> getAll();
 
     public boolean isUsernameAvailable(String username);
 }

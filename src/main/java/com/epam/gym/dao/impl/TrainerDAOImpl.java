@@ -2,7 +2,6 @@ package com.epam.gym.dao.impl;
 
 import com.epam.gym.dao.TrainerDAO;
 import com.epam.gym.entity.Trainer;
-import com.epam.gym.util.InMemoryStorage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +19,7 @@ public class TrainerDAOImpl implements TrainerDAO {
 
 
     @Override
-    public Trainer createTrainer(Trainer trainer) {
+    public Trainer create(Trainer trainer) {
         log.info("Creating trainer: {}", trainer);
         trainer.setId(trainerIdCounter++);
         storage.getTrainerStorage().put(trainer.getId(), trainer);
@@ -30,7 +29,7 @@ public class TrainerDAOImpl implements TrainerDAO {
 
 
     @Override
-    public Trainer updateTrainer(Trainer trainer) {
+    public Trainer update(Trainer trainer) {
         log.info("Updating trainer: {}", trainer);
         var trainer1 = storage.getTrainerStorage().get(trainer.getId());
         if (trainer1 != null) {
@@ -44,20 +43,20 @@ public class TrainerDAOImpl implements TrainerDAO {
     }
 
     @Override
-    public void deleteTrainer(Long id) {
+    public void delete(Long id) {
         log.info("Deleting trainer with id: {}", id);
         storage.getTrainerStorage().remove(id);
         log.info("Trainer with id {} was deleted", id);
     }
 
     @Override
-    public Trainer getTrainerById(Long id) {
+    public Trainer getById(Long id) {
         log.info("Getting trainer by id: {}", id);
         return storage.getTrainerStorage().get(id);
     }
 
     @Override
-    public List<Trainer> getAllTrainers() {
+    public List<Trainer> getAll() {
         log.info("Getting all trainers");
         return storage.getTrainerStorage().values().stream().toList();
     }

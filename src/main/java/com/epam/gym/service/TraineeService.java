@@ -1,16 +1,12 @@
 package com.epam.gym.service;
 
-import com.epam.gym.dao.TraineeDAO;
-import com.epam.gym.entity.Trainee;
-import com.epam.gym.entity.dto.TraineeDTO;
-import com.epam.gym.mapper.TraineeMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 public class TraineeService {
+/*
 
     private final TraineeDAO traineeDAO;
     private final UserService userService;
@@ -44,5 +40,6 @@ public class TraineeService {
         var trainee = TraineeMapper.toTrainee(traineeDTO, user.getId());
         return traineeDAO.updateTrainee(trainee);
     }
+*/
 
 }

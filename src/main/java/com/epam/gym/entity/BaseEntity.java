@@ -1,4 +1,4 @@
-package com.epam.gym.entity.baseEntity;
+package com.epam.gym.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

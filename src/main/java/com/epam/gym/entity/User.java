@@ -1,6 +1,5 @@
 package com.epam.gym.entity;
 
-import com.epam.gym.entity.baseEntity.BaseEntity;
 import lombok.*;
 
 @Getter

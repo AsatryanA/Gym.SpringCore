@@ -1,17 +1,12 @@
 package com.epam.gym.service;
 
-import com.epam.gym.dao.UserDAO;
-import com.epam.gym.entity.User;
-import com.epam.gym.entity.dto.BaseUserDTO;
-import com.epam.gym.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 public class UserService {
-    private final UserDAO userDAO;
+/*    private final UserDAO userDAO;
 
     @Autowired
     public UserService(UserDAO userDAO) {
@@ -29,6 +24,6 @@ public class UserService {
             user.setUsername(user.getUsername() + serialNumber);
         }
         return userDAO.createUser(user);
-    }
+    }*/
 
 }

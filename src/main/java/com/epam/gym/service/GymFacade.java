@@ -1,16 +1,18 @@
 package com.epam.gym.service;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
+@Getter
 @Component
 public class GymFacade {
 
-    private TraineeService traineeService;
-    private TrainerService trainerService;
-    private TrainingService trainingService;
+    private final TraineeService traineeService;
+    private final TrainerService trainerService;
+    private final TrainingService trainingService;
 
     @Autowired
     public GymFacade(TraineeService traineeService, TrainerService trainerService, TrainingService trainingService) {
@@ -19,19 +21,9 @@ public class GymFacade {
         this.trainingService = trainingService;
     }
 
-    @Autowired
-    public void setTraineeService(TraineeService traineeService) {
-        this.traineeService = traineeService;
-    }
-
-    @Autowired
-    public void setTrainerService(TrainerService trainerService) {
-        this.trainerService = trainerService;
-    }
-
-    @Autowired
-    public void setTrainingService(TrainingService trainingService) {
-        this.trainingService = trainingService;
-    }
 
 }
+
+
+
+

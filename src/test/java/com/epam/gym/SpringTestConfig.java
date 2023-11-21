@@ -5,7 +5,6 @@ import com.epam.gym.dao.impl.TrainerDAOImpl;
 import com.epam.gym.dao.impl.TrainingDAOImpl;
 import com.epam.gym.dao.impl.UserDAOImpl;
 import com.epam.gym.service.UserService;
-import com.epam.gym.util.InMemoryStorage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

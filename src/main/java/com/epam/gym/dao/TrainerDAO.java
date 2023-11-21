@@ -5,14 +5,14 @@ import com.epam.gym.entity.Trainer;
 import java.util.List;
 
 public interface TrainerDAO {
-    Trainer createTrainer(Trainer trainee);
+    Trainer create(Trainer trainee);
 
-    Trainer updateTrainer(Trainer trainee);
+    Trainer update(Trainer trainee);
 
-    void deleteTrainer(Long id);
+    void delete(Long id);
 
-    Trainer getTrainerById(Long id);
+    Trainer getById(Long id);
 
-    List<Trainer> getAllTrainers();
+    List<Trainer> getAll();
 }
 

@@ -44,13 +44,13 @@ class TraineeServiceTest {
         var trainee = new Trainee(traineeDTO.getDateOfBirth(), traineeDTO.getAddress(), user.getId());
 
         when(userService.createUser(any(TraineeDTO.class))).thenReturn(user);
-        when(traineeDAO.createTrainee(any(Trainee.class))).thenReturn(trainee);
+        when(traineeDAO.create(any(Trainee.class))).thenReturn(trainee);
 
         Trainee createdTrainee = traineeService.createTrainee(traineeDTO);
 
         assertEquals(user.getId(), createdTrainee.getUserId());
         verify(userService, Mockito.times(1)).createUser(traineeDTO);
-        verify(traineeDAO, Mockito.times(1)).createTrainee(any(Trainee.class));
+        verify(traineeDAO, Mockito.times(1)).create(any(Trainee.class));
     }
 
     @Test
@@ -59,12 +59,12 @@ class TraineeServiceTest {
         long traineeId = 1L;
         Trainee expectedTrainee = new Trainee(new Date(), "John Doe", 1L);
 
-        when(traineeDAO.getTraineeById(traineeId)).thenReturn(expectedTrainee);
+        when(traineeDAO.getById(traineeId)).thenReturn(expectedTrainee);
 
         Trainee retrievedTrainee = traineeService.getTraineeById(traineeId);
 
         assertEquals(expectedTrainee, retrievedTrainee);
-        verify(traineeDAO, Mockito.times(1)).getTraineeById(traineeId);
+        verify(traineeDAO, Mockito.times(1)).getById(traineeId);
     }
 
     @Test
@@ -74,7 +74,7 @@ class TraineeServiceTest {
 
         traineeService.deleteTrainee(traineeId);
 
-        verify(traineeDAO, Mockito.times(1)).deleteTrainee(traineeId);
+        verify(traineeDAO, Mockito.times(1)).delete(traineeId);
     }
 
 

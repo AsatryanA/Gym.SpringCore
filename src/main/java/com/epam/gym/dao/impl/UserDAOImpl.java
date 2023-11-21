@@ -2,7 +2,6 @@ package com.epam.gym.dao.impl;
 
 import com.epam.gym.dao.UserDAO;
 import com.epam.gym.entity.User;
-import com.epam.gym.util.InMemoryStorage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,13 +11,9 @@ import java.util.List;
 @Slf4j
 @Component
 public class UserDAOImpl implements UserDAO {
-    private static Long userIdCounter = 11L;
-
-    @Autowired
-    private InMemoryStorage storage;
 
     @Override
-    public User createUser(User user) {
+    public User create(User user) {
         log.info("Creating user: {}", user);
         var noneMatch = storage.getUserStorage().values().stream().noneMatch(u -> u.getUsername().equals(user.getUsername()));
         if (noneMatch) {
@@ -33,7 +28,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User updateUser(User user) {
+    public User update(User user) {
         log.info("Updating user: {}", user);
         var user1 = storage.getUserStorage().get(user.getId());
         if (user1 != null) {
@@ -47,20 +42,20 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void delete(Long id) {
         log.info("Deleting user with id: {}", id);
         storage.getUserStorage().remove(id);
         log.info("User with id {} was deleted", id);
     }
 
     @Override
-    public User getUserById(Long id) {
+    public User getById(Long id) {
         log.info("Getting user by id: {}", id);
         return storage.getUserStorage().get(id);
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> getAll() {
         log.info("Getting all users");
         return storage.getUserStorage().values().stream().toList();
     }
