@@ -2,59 +2,44 @@ package com.epam.gym.dao.impl;
 
 import com.epam.gym.dao.TrainingDAO;
 import com.epam.gym.entity.Training;
+import com.epam.gym.exception.EntityCreationException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.Session;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class TrainingDAOImpl implements TrainingDAO {
-    private static Long trainingIdCounter = 11L;
 
-    @Autowired
-    private InMemoryStorage storage;
+    private final Session session;
+
 
     @Override
     public Training create(Training training) {
-        log.info("Creating training: {}", training);
-        training.setId(trainingIdCounter++);
-        storage.getTrainingStorage().put(training.getId(), training);
-        log.info("Training with id {} was created", training.getId());
-        return training;
-    }
-
-    @Override
-    public Training update(Training training) {
-        log.info("Updating training: {}", training);
-        var training1 = storage.getTrainingStorage().get(training.getId());
-        if (training1 != null) {
-            storage.getTrainingStorage().put(training.getId(), training);
-            log.info("Training with id {} was updated", training.getId());
+        log.info("Creating training: {} , {}",
+                training.getTrainingType().getName(),
+                training.getTrainer().getUser().getUsername());
+        try {
+            session.beginTransaction();
+            session.persist(training);
+            session.getTransaction().commit();
             return training;
-        } else {
-            log.error("Training with id {} doesn't exist", training.getId());
-            throw new RuntimeException("Training with id " + training.getId() + " doesn't exist");
+        } catch (Exception e) {
+            log.error("Error while creating training: {}", e.getMessage());
+            session.getTransaction().rollback();
+            throw new EntityCreationException(e.getMessage());
         }
     }
 
     @Override
-    public void delete(Long id) {
-        log.info("Deleting training with id: {}", id);
-        storage.getTrainingStorage().remove(id);
-        log.info("Training with id {} was deleted", id);
-    }
-
-    @Override
-    public Training getById(Long id) {
-        log.info("Getting training by id: {}", id);
-        return storage.getTrainingStorage().get(id);
-    }
-
-    @Override
-    public List<Training> getAll() {
-        log.info("Getting all trainings");
-        return storage.getTrainingStorage().values().stream().toList();
+    public List<Training> getByIds(List<Long> ids) {
+        log.info("Getting trainings by ids: {}", ids);
+        return session.createQuery("from Training where id in (:ids)", Training.class)
+                .setParameterList("ids", ids)
+                .list();
     }
 }

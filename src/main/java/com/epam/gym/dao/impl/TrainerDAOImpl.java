@@ -2,62 +2,101 @@ package com.epam.gym.dao.impl;
 
 import com.epam.gym.dao.TrainerDAO;
 import com.epam.gym.entity.Trainer;
+import com.epam.gym.exception.EntityCreationException;
+import com.epam.gym.exception.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.Session;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class TrainerDAOImpl implements TrainerDAO {
 
-    private static Long trainerIdCounter = 11L;
-
-    @Autowired
-    private InMemoryStorage storage;
-
+    private final Session session;
 
     @Override
     public Trainer create(Trainer trainer) {
-        log.info("Creating trainer: {}", trainer);
-        trainer.setId(trainerIdCounter++);
-        storage.getTrainerStorage().put(trainer.getId(), trainer);
-        log.info("Trainer with id {} was created", trainer.getId());
-        return trainer;
+        log.info("Creating trainer: {} , {}",
+                trainer.getUser().getFirstName(),
+                trainer.getUser().getLastName());
+        try {
+            session.beginTransaction();
+            session.persist(trainer);
+            session.getTransaction().commit();
+            return trainer;
+        } catch (Exception e) {
+            log.error("Error while creating trainer: {}", e.getMessage());
+            session.getTransaction().rollback();
+            throw new EntityCreationException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Trainer> getByIds(List<Long> trainerIds) {
+        log.info("Getting trainers by ids: {}", trainerIds);
+        return session.createQuery("from Trainer where id in (:ids)", Trainer.class)
+                .setParameterList("ids", trainerIds)
+                .list();
     }
 
 
     @Override
     public Trainer update(Trainer trainer) {
-        log.info("Updating trainer: {}", trainer);
-        var trainer1 = storage.getTrainerStorage().get(trainer.getId());
-        if (trainer1 != null) {
-            storage.getTrainerStorage().put(trainer.getId(), trainer);
-            log.info("Trainer with id {} was updated", trainer.getId());
+        log.info("Updating trainer: {}", trainer.getUser().getUsername());
+        try {
+            session.beginTransaction();
+            session.merge(trainer);
+            session.getTransaction().commit();
             return trainer;
-        } else {
-            log.error("Trainer with id {} doesn't exist", trainer.getId());
-            throw new RuntimeException("Trainer with id " + trainer.getId() + " doesn't exist");
+        } catch (Exception e) {
+            log.error("Error while updating trainer: {}", e.getMessage());
+            session.getTransaction().rollback();
+            throw new EntityCreationException(e.getMessage());
         }
     }
 
     @Override
     public void delete(Long id) {
         log.info("Deleting trainer with id: {}", id);
-        storage.getTrainerStorage().remove(id);
-        log.info("Trainer with id {} was deleted", id);
+        try {
+            session.beginTransaction();
+            session.detach(session.get(Trainer.class, id));
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            log.error("Error while deleting trainer: {}", e.getMessage());
+            session.getTransaction().rollback();
+            throw new EntityCreationException(e.getMessage());
+        }
     }
 
     @Override
     public Trainer getById(Long id) {
-        log.info("Getting trainer by id: {}", id);
-        return storage.getTrainerStorage().get(id);
+        log.info("Getting trainer with id: {}", id);
+        return session.get(Trainer.class, id);
     }
 
     @Override
     public List<Trainer> getAll() {
         log.info("Getting all trainers");
-        return storage.getTrainerStorage().values().stream().toList();
+        return session.createQuery("from Trainer", Trainer.class).list();
     }
+
+    @Override
+    public Trainer getByUsername(String username) {
+        log.info("Getting trainer by username: {}", username);
+        try {
+            return session.createQuery("from Trainer where user.username = :username", Trainer.class)
+                    .setParameter("username", username)
+                    .uniqueResult();
+        } catch (EntityNotFoundException e) {
+            log.error("Error while getting trainer by username: {}", e.getMessage());
+            throw new EntityNotFoundException(e.getMessage());
+        }
+    }
+
+
 }

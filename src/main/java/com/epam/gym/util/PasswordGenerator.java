@@ -3,6 +3,9 @@ package com.epam.gym.util;
 import java.security.SecureRandom;
 
 public class PasswordGenerator {
+    private PasswordGenerator() {
+    }
+
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
 
     public static String generateRandomPassword() {

@@ -1,13 +1,13 @@
 package com.epam.gym.dao;
 
 import com.epam.gym.entity.User;
+import com.epam.gym.entity.dto.request.ChangePasswordDTO;
 
 import java.util.List;
 
 public interface UserDAO {
-    User create(User trainee);
 
-    User update(User trainee);
+    User update(User user);
 
     void delete(Long id);
 
@@ -15,5 +15,6 @@ public interface UserDAO {
 
     List<User> getAll();
 
-    public boolean isUsernameAvailable(String username);
+    boolean isUsernameAvailable(String username);
+
 }

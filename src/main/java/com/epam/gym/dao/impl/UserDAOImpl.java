@@ -2,68 +2,68 @@ package com.epam.gym.dao.impl;
 
 import com.epam.gym.dao.UserDAO;
 import com.epam.gym.entity.User;
+import com.epam.gym.entity.dto.request.ChangePasswordDTO;
+import com.epam.gym.exception.EntityCreationException;
+import com.epam.gym.exception.EntityUpdateException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.Session;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class UserDAOImpl implements UserDAO {
-
-    @Override
-    public User create(User user) {
-        log.info("Creating user: {}", user);
-        var noneMatch = storage.getUserStorage().values().stream().noneMatch(u -> u.getUsername().equals(user.getUsername()));
-        if (noneMatch) {
-            user.setId(userIdCounter++);
-            storage.getUserStorage().put(user.getId(), user);
-            log.info("User with id {} was created", user.getId());
-            return user;
-        } else {
-            log.error("User with id {} already exists", user.getId());
-            throw new RuntimeException("User with id " + user.getId() + " already exists");
-        }
-    }
+    private final Session session;
 
     @Override
     public User update(User user) {
         log.info("Updating user: {}", user);
-        var user1 = storage.getUserStorage().get(user.getId());
-        if (user1 != null) {
-            storage.getUserStorage().put(user.getId(), user);
-            log.info("User with id {} was updated", user.getId());
+        try {
+            session.beginTransaction();
+            session.merge(user);
+            session.getTransaction().commit();
             return user;
-        } else {
-            log.error("User with id {} doesn't exist", user.getId());
-            throw new RuntimeException("User with id " + user.getId() + " doesn't exist");
+        } catch (Exception e) {
+            log.error("Error while updating user: {}", e.getMessage());
+            session.getTransaction().rollback();
+            throw new EntityUpdateException(e.getMessage());
         }
     }
 
     @Override
     public void delete(Long id) {
         log.info("Deleting user with id: {}", id);
-        storage.getUserStorage().remove(id);
-        log.info("User with id {} was deleted", id);
+        try {
+            session.beginTransaction();
+            session.detach(session.get(User.class, id));
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            log.error("Error while deleting user: {}", e.getMessage());
+            session.getTransaction().rollback();
+            throw new EntityCreationException(e.getMessage());
+        }
     }
 
     @Override
     public User getById(Long id) {
-        log.info("Getting user by id: {}", id);
-        return storage.getUserStorage().get(id);
+        log.info("Getting user with id: {}", id);
+        return session.get(User.class, id);
     }
 
     @Override
     public List<User> getAll() {
         log.info("Getting all users");
-        return storage.getUserStorage().values().stream().toList();
+        return session.createQuery("from User", User.class).list();
     }
 
+    @Override
     public boolean isUsernameAvailable(String username) {
-        return storage.getUserStorage().values()
-                .stream()
-                .noneMatch(u -> u.getUsername() != null &&
-                        u.getUsername().equals(username));
+        log.info("Checking if username is available: {}", username);
+        return session.createQuery("from User where username = :username", User.class).setParameter("username", username).uniqueResult() != null;
     }
+
+
 }

@@ -1,9 +1,10 @@
 package com.epam.gym.config;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -19,45 +20,67 @@ import java.util.Properties;
 @RequiredArgsConstructor
 public class HibernateConf {
 
-    private final Environment environment;
+    @Value("${spring.datasource.driver-class-name}")
+    private String driverClassName;
+    @Value("${spring.datasource.url}")
+    private String url;
+    @Value("${spring.datasource.username}")
+    private String username;
+    @Value("${spring.datasource.password}")
+    private String password;
+    @Value("${spring.jpa.hibernate.ddl-auto}")
+    private String hbm2ddlAuto;
+    @Value("${spring.jpa.properties.hibernate.dialect}")
+    private String dialect;
+    @Value("${spring.jpa.show-sql}")
+    private String showSql;
+    @Value("${spring.jpa.properties.hibernate.format_sql}")
+    private String formatSql;
 
     @Bean
     public LocalSessionFactoryBean sessionFactory() {
-        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+        var sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan(
-                "com.epam.gym.model");
+        sessionFactory.setAnnotatedClasses(
+                com.epam.gym.entity.Training.class,
+                com.epam.gym.entity.TrainingType.class,
+                com.epam.gym.entity.Trainee.class,
+                com.epam.gym.entity.Trainer.class,
+                com.epam.gym.entity.User.class);
         sessionFactory.setHibernateProperties(hibernateProperties());
-
         return sessionFactory;
     }
 
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(Objects.requireNonNull(environment.getProperty("spring.datasource.driver-class-name")));
-        dataSource.setUrl(Objects.requireNonNull(environment.getProperty("spring.datasource.url")));
-        dataSource.setUsername(Objects.requireNonNull(environment.getProperty("spring.datasource.username")));
-        dataSource.setPassword(Objects.requireNonNull(environment.getProperty("spring.datasource.password")));
-
+        var dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
         return dataSource;
     }
 
     @Bean
     public PlatformTransactionManager hibernateTransactionManager() {
-        HibernateTransactionManager transactionManager
-                = new HibernateTransactionManager();
+        var transactionManager = new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory().getObject());
         return transactionManager;
     }
 
-    private Properties hibernateProperties() {
-        Properties hibernateProperties = new Properties();
-        hibernateProperties.setProperty(
-                "hibernate.hbm2ddl.auto", Objects.requireNonNull(environment.getProperty("spring.jpa.hibernate.ddl-auto")));
-        hibernateProperties.setProperty(
-                "hibernate.dialect", Objects.requireNonNull(environment.getProperty("spring.jpa.properties.hibernate.dialect")));
+    @Bean
+    public Session getSession() {
+        return Objects.requireNonNull(sessionFactory().getObject()).openSession();
+    }
 
+    private Properties hibernateProperties() {
+        var hibernateProperties = new Properties();
+        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", hbm2ddlAuto);
+        hibernateProperties.setProperty("hibernate.dialect", dialect);
+        hibernateProperties.setProperty("hibernate.show_sql", showSql);
+        hibernateProperties.setProperty("hibernate.format_sql", formatSql);
         return hibernateProperties;
     }
+
+
 }

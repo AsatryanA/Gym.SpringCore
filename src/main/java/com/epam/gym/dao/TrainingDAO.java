@@ -5,13 +5,7 @@ import com.epam.gym.entity.Training;
 import java.util.List;
 
 public interface TrainingDAO {
-    Training create(Training trainee);
+    Training create(Training training);
 
-    Training update(Training trainee);
-
-    void delete(Long id);
-
-    Training getById(Long id);
-
-    List<Training> getAll();
+    List<Training> getByIds(List<Long> ids);
 }

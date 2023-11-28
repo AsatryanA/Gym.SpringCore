@@ -1,16 +1,32 @@
 package com.epam.gym.entity;
 
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
 
 @Getter
 @Setter
-@ToString
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "users")
 public class User extends BaseEntity {
-    String firstName;
-    String lastName;
-    String username;
-    String password;
-    Boolean isActive;
+
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "last_name")
+    private String lastName;
+    private String username;
+    private String password;
+    @Column(name = "is_active")
+    private Boolean isActive;
+
+
 }

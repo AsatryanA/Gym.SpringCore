@@ -1,13 +1,23 @@
 package com.epam.gym.entity;
 
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
 
 @Getter
 @Setter
-@ToString
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "training_types")
 public class TrainingType extends BaseEntity {
-
+    @NonNull
     private String name;
 }
