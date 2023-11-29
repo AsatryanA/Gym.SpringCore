@@ -15,7 +15,6 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class TrainerDAOImpl implements TrainerDAO {
-
     private final Session session;
 
     @Override
@@ -43,7 +42,6 @@ public class TrainerDAOImpl implements TrainerDAO {
                 .list();
     }
 
-
     @Override
     public Trainer update(Trainer trainer) {
         log.info("Updating trainer: {}", trainer.getUser().getUsername());
@@ -60,29 +58,9 @@ public class TrainerDAOImpl implements TrainerDAO {
     }
 
     @Override
-    public void delete(Long id) {
-        log.info("Deleting trainer with id: {}", id);
-        try {
-            session.beginTransaction();
-            session.detach(session.get(Trainer.class, id));
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            log.error("Error while deleting trainer: {}", e.getMessage());
-            session.getTransaction().rollback();
-            throw new EntityCreationException(e.getMessage());
-        }
-    }
-
-    @Override
     public Trainer getById(Long id) {
         log.info("Getting trainer with id: {}", id);
         return session.get(Trainer.class, id);
-    }
-
-    @Override
-    public List<Trainer> getAll() {
-        log.info("Getting all trainers");
-        return session.createQuery("from Trainer", Trainer.class).list();
     }
 
     @Override
@@ -98,5 +76,16 @@ public class TrainerDAOImpl implements TrainerDAO {
         }
     }
 
-
+    public Trainer findByUsernameAndPassword(String username, String password) {
+        log.info("Getting trainer by username: {}, password: {}", username, password);
+        var builder = session.getCriteriaBuilder();
+        var criteriaQuery = builder.createQuery(Trainer.class);
+        var trainerRoot = criteriaQuery.from(Trainer.class);
+        criteriaQuery.select(trainerRoot);
+        criteriaQuery.where(
+                builder.equal(trainerRoot.join("user").get("username"), username),
+                builder.equal(trainerRoot.join("user").get("password"), password)
+        );
+        return session.createQuery(criteriaQuery).getSingleResult();
+    }
 }

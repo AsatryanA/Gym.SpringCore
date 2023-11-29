@@ -1,8 +1,5 @@
 package com.epam.gym;
 
-import com.epam.gym.entity.TrainingType;
-import com.epam.gym.entity.dto.request.TrainerUpdateDTO;
-import com.epam.gym.entity.dto.request.UserUpdateDTO;
 import com.epam.gym.service.GymFacade;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -41,17 +38,23 @@ public class MainApp {
 
         // gymFacade.getTrainerService().changePassword(ChangePasswordDTO.builder().newPassword("123456").oldPassword("123").id(8L).build());
 
-        gymFacade.getTrainerService().update(TrainerUpdateDTO
-                .builder()
-                .id(5L).user(UserUpdateDTO
-                        .builder()
-                        .id(9L)
-                        .firstName("Arsen").lastName("Asatryan")
-                        .build())
-                .specialization(TrainingType.builder().id(7L).name("Boxing").build())
+        // var trainingsByUsername = gymFacade.getTrainerService().getTrainingsByUsername("Arsen.Asatryan4");
+        //  var trainingsByUsername1 = gymFacade.getTraineeService().getTrainingsByUsername("Ars.Asatryan");
+        //  System.out.println(trainingsByUsername);
 
+      /*  gymFacade.getTrainingService().create(TrainingRequestDTO.builder()
+                .date(LocalDate.now())
+                .duration(60)
+                .name("Boxing")
+                .traineeId(2L)
+                .trainerId(53L)
+                .trainingTypeId(4L)
                 .build());
+*/
+        var trainingsByUsernameAndDuration = gymFacade.getTraineeService().getTrainingsByUsernameAndDuration("Ars.Asatryan", 12, 16);
+        System.out.println(trainingsByUsernameAndDuration);
 
+        gymFacade.getTraineeService().deleteByUsername("Arsen.Asatryan5");
     }
 
 }

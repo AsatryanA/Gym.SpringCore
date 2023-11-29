@@ -18,7 +18,6 @@ import java.util.List;
 public class TraineeDAOImpl implements TraineeDAO {
     private final Session session;
 
-
     @Override
     public Trainee create(Trainee trainee) {
         log.info("Creating trainee: {} , {}", trainee.getUser().getFirstName(), trainee.getUser().getLastName());
@@ -52,11 +51,11 @@ public class TraineeDAOImpl implements TraineeDAO {
     }
 
     @Override
-    public void deleteByUsername(String username) {
-        log.info("Deleting trainee by username: {}", username);
+    public void delete(Trainee trainee) {
+        log.info("Deleting trainee: {} , {}", trainee.getUser().getFirstName(), trainee.getUser().getLastName());
         try {
             session.beginTransaction();
-            session.createMutationQuery("delete from Trainee where user.username = :username").setParameter("username", username).executeUpdate();
+            session.remove(trainee);
             session.getTransaction().commit();
         } catch (Exception e) {
             log.error("Error while deleting trainee: {}", e.getMessage());
@@ -87,8 +86,16 @@ public class TraineeDAOImpl implements TraineeDAO {
     }
 
     @Override
-    public List<Trainee> getAll() {
-        log.info("Getting all trainees");
-        return session.createQuery("from Trainee", Trainee.class).list();
+    public Trainee findByUsernameAndPassword(String username, String password) {
+        log.info("Getting trainee by username and password: {}", username);
+        var builder = session.getCriteriaBuilder();
+        var criteriaQuery = builder.createQuery(Trainee.class);
+        var traineeRoot = criteriaQuery.from(Trainee.class);
+        criteriaQuery.select(traineeRoot);
+        criteriaQuery.where(
+                builder.equal(traineeRoot.join("user").get("username"), username),
+                builder.equal(traineeRoot.join("user").get("password"), password)
+        );
+        return session.createQuery(criteriaQuery).getSingleResult();
     }
 }

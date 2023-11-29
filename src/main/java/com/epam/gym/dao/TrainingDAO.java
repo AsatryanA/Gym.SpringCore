@@ -8,4 +8,6 @@ public interface TrainingDAO {
     Training create(Training training);
 
     List<Training> getByIds(List<Long> ids);
+
+    List<Training> getTrainingsByUsernameAndDuration(String username, Integer durationFrom, Integer durationTo);
 }

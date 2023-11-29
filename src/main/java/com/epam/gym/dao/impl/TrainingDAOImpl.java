@@ -6,6 +6,7 @@ import com.epam.gym.exception.EntityCreationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,7 +17,6 @@ import java.util.List;
 public class TrainingDAOImpl implements TrainingDAO {
 
     private final Session session;
-
 
     @Override
     public Training create(Training training) {
@@ -41,5 +41,20 @@ public class TrainingDAOImpl implements TrainingDAO {
         return session.createQuery("from Training where id in (:ids)", Training.class)
                 .setParameterList("ids", ids)
                 .list();
+    }
+
+    @Override
+    public List<Training> getTrainingsByUsernameAndDuration(String username, Integer durationFrom, Integer durationTo) {
+        log.info("Getting trainings by username: {}, duration from: {}, duration to: {}", username, durationFrom, durationTo);
+        var criteriaBuilder = session.getCriteriaBuilder();
+        var criteriaQuery = criteriaBuilder.createQuery(Training.class);
+        var trainingRoot = criteriaQuery.from(Training.class);
+        criteriaQuery.select(trainingRoot)
+                .where(
+                        criteriaBuilder.equal(trainingRoot.get("trainee").get("user").get("username"), username),
+                        criteriaBuilder.between(trainingRoot.get("duration"), durationFrom, durationTo)
+                );
+        Query<Training> query = session.createQuery(criteriaQuery);
+        return query.getResultList();
     }
 }

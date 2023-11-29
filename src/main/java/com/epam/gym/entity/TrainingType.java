@@ -5,7 +5,6 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
@@ -18,6 +17,5 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "training_types")
 public class TrainingType extends BaseEntity {
-    @NonNull
     private String name;
 }

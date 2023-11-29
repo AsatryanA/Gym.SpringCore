@@ -37,6 +37,24 @@ public class UserService {
         return userMapper.toUserResponseDto(userDAO.update(user));
     }
 
+    public void changePassword(ChangePasswordDTO changePasswordDTO, User user) {
+        log.info("Changing password for user with id: {}", changePasswordDTO.getId());
+        if (user != null) {
+            if (user.getPassword().equals(changePasswordDTO.getOldPassword())) {
+                user.setPassword(changePasswordDTO.getNewPassword());
+                userDAO.update(user);
+            }
+        }
+    }
+
+    public void activate(Long id, boolean isActive) {
+        var user = userDAO.getById(id);
+        if (user != null) {
+            user.setIsActive(isActive);
+            userDAO.update(user);
+        }
+    }
+
     private String generateUsername(String firstName, String lastName) {
         var username = String.format("%s.%s", firstName, lastName);
         int serialNumber = 1;
@@ -53,13 +71,5 @@ public class UserService {
         return PasswordGenerator.generateRandomPassword();
     }
 
-    public void changePassword(ChangePasswordDTO changePasswordDTO, User user) {
-        log.info("Changing password for user with id: {}", changePasswordDTO.getId());
-        if (user != null) {
-            if (user.getPassword().equals(changePasswordDTO.getOldPassword())) {
-                user.setPassword(changePasswordDTO.getNewPassword());
-                userDAO.update(user);
-            }
-        }
-    }
+
 }

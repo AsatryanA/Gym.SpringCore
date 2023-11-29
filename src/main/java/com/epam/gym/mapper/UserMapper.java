@@ -32,6 +32,7 @@ public class UserMapper {
         if (userResponseDTO == null)
             throw new EntityNotFoundException("User not found");
         return User.builder()
+                .id(userResponseDTO.getId())
                 .firstName(userResponseDTO.getFirstName())
                 .lastName(userResponseDTO.getLastName())
                 .username(userResponseDTO.getUsername())
