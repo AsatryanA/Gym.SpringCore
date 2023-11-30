@@ -21,7 +21,6 @@ public class TraineeMapper {
         }
         return Trainee.builder()
                 .dateOfBirth(traineeRequestDTO.getDateOfBirth())
-
                 .user(user)
                 .address(traineeRequestDTO.getAddress())
                 .build();
@@ -40,7 +39,6 @@ public class TraineeMapper {
                 .trainerIds(trainee.getTrainers().stream().map(BaseEntity::getId).toList())
                 .build();
     }
-
 }
 
 

@@ -29,7 +29,6 @@ import java.util.List;
 @Entity
 @Table(name = "trainees")
 public class Trainee extends BaseEntity {
-
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
     @Column(name = "address")

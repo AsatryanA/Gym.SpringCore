@@ -39,6 +39,4 @@ public class UserMapper {
                 .isActive(userResponseDTO.getIsActive())
                 .build();
     }
-
-
 }

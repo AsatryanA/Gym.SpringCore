@@ -12,12 +12,14 @@ import com.epam.gym.mapper.TrainingMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TrainingService {
 
     private final TrainingDAO trainingDAO;
@@ -25,7 +27,6 @@ public class TrainingService {
     private final TraineeDAO traineeDAO;
     private final TrainerDAO trainerDAO;
     private final TrainingTypeDAO trainingTypeDAO;
-
 
     public Training create(TrainingRequestDTO trainingRequestDTO) {
         log.info("Creating training: {}", trainingRequestDTO);

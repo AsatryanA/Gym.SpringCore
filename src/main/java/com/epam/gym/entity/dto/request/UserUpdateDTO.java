@@ -14,5 +14,4 @@ import lombok.experimental.SuperBuilder;
 public class UserUpdateDTO extends UserRequestDTO {
     private Long id;
     private String password;
-
 }

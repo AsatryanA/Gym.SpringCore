@@ -11,10 +11,12 @@ import com.epam.gym.util.PasswordGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
 
     private final UserDAO userDAO;
@@ -39,11 +41,9 @@ public class UserService {
 
     public void changePassword(ChangePasswordDTO changePasswordDTO, User user) {
         log.info("Changing password for user with id: {}", changePasswordDTO.getId());
-        if (user != null) {
-            if (user.getPassword().equals(changePasswordDTO.getOldPassword())) {
-                user.setPassword(changePasswordDTO.getNewPassword());
-                userDAO.update(user);
-            }
+        if (user != null && (user.getPassword().equals(changePasswordDTO.getOldPassword()))) {
+            user.setPassword(changePasswordDTO.getNewPassword());
+            userDAO.update(user);
         }
     }
 
@@ -70,6 +70,4 @@ public class UserService {
     private String generatePassword() {
         return PasswordGenerator.generateRandomPassword();
     }
-
-
 }

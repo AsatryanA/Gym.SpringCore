@@ -10,16 +10,17 @@ import com.epam.gym.entity.dto.response.TraineeResponseDTO;
 import com.epam.gym.entity.dto.response.TrainingResponseDTO;
 import com.epam.gym.exception.EntityNotFoundException;
 import com.epam.gym.mapper.TraineeMapper;
-import com.epam.gym.mapper.TrainingMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TraineeService {
 
     private final TraineeDAO traineeDAO;
@@ -28,7 +29,6 @@ public class TraineeService {
     private final UserService userService;
     private final TraineeMapper traineeMapper;
     private final TrainingService trainingService;
-    private final TrainingMapper trainingMapper;
 
 
     public TraineeResponseDTO create(TraineeRequestDTO traineeRequestDTO) {
@@ -41,10 +41,6 @@ public class TraineeService {
         trainee.setTrainers(trainerDAO.getByIds(traineeRequestDTO.getTrainerIds()));
         return traineeMapper.toTraineeResponseDTO(traineeDAO.create(trainee));
     }
-
-/*    public TraineeResponseDTO update(TraineeUpdateDTO traineeUpdateDTO) {
-        return null;
-    }*/
 
     public TraineeResponseDTO getByUsername(String username) {
         log.info("Getting trainee by username: {}", username);

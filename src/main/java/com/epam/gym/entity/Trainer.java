@@ -28,7 +28,6 @@ import java.util.List;
 @Entity
 @Table(name = "trainers")
 public class Trainer extends BaseEntity {
-
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "specialization")
     private TrainingType specialization;

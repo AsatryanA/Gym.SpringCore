@@ -12,17 +12,18 @@ import com.epam.gym.entity.dto.response.TrainerResponseDTO;
 import com.epam.gym.entity.dto.response.TrainingResponseDTO;
 import com.epam.gym.exception.EntityNotFoundException;
 import com.epam.gym.mapper.TrainerMapper;
-import com.epam.gym.mapper.TrainingMapper;
 import com.epam.gym.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TrainerService {
     private final TrainerDAO trainerDAO;
     private final TraineeDAO traineeDAO;
@@ -31,7 +32,6 @@ public class TrainerService {
     private final TrainerMapper trainerMapper;
     private final UserMapper userMapper;
     private final TrainingService trainingService;
-    private final TrainingMapper trainingMapper;
 
     public TrainerResponseDTO create(TrainerRequestDTO trainerRequestDTO) {
         log.info("Creating trainer: {}, {}",

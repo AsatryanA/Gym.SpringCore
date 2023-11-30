@@ -22,7 +22,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "trainings")
 public class Training extends BaseEntity {
-
     private String name;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Trainee trainee;
