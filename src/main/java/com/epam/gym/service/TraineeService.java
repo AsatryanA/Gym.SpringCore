@@ -42,6 +42,7 @@ public class TraineeService {
         return traineeMapper.toTraineeResponseDTO(traineeDAO.create(trainee));
     }
 
+
     public TraineeResponseDTO getByUsername(String username) {
         log.info("Getting trainee by username: {}", username);
         return traineeMapper.toTraineeResponseDTO(traineeDAO.getByUsername(username));
