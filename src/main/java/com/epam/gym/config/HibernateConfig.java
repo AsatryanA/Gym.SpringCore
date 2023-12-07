@@ -1,7 +1,6 @@
 package com.epam.gym.config;
 
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,13 +12,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
-import java.util.Objects;
 import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
 @RequiredArgsConstructor
-public class HibernateConf {
+public class HibernateConfig {
 
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
@@ -69,10 +67,6 @@ public class HibernateConf {
         return transactionManager;
     }
 
-    @Bean
-    public Session getSession() {
-        return Objects.requireNonNull(sessionFactory().getObject()).openSession();
-    }
 
     private Properties hibernateProperties() {
         var hibernateProperties = new Properties();

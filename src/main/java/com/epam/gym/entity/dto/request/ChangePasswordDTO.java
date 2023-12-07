@@ -6,13 +6,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChangePasswordDTO {
+    @NotNull
     Long id;
+    @NotNull
     String oldPassword;
+    @NotNull
     String newPassword;
 }

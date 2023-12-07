@@ -1,17 +1,21 @@
-package com.epam.gym.entity.dto.request;
+package com.epam.gym.entity.dto.response;
 
+import com.epam.gym.entity.TrainingType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequestDTO {
+public class TraineeTrainersResponseDTO {
+    private String username;
     private String firstName;
     private String lastName;
+    private TrainingType specialization;
+
 }

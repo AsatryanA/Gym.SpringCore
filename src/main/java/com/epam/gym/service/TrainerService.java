@@ -1,18 +1,17 @@
 package com.epam.gym.service;
 
-import com.epam.gym.dao.TraineeDAO;
 import com.epam.gym.dao.TrainerDAO;
-import com.epam.gym.dao.TrainingDAO;
-import com.epam.gym.entity.User;
-import com.epam.gym.entity.dto.request.ChangePasswordDTO;
+import com.epam.gym.entity.Trainer;
+import com.epam.gym.entity.dto.request.ToggleActiveDTO;
 import com.epam.gym.entity.dto.request.TrainerRequestDTO;
 import com.epam.gym.entity.dto.request.TrainerUpdateDTO;
-import com.epam.gym.entity.dto.request.UserUpdateDTO;
+import com.epam.gym.entity.dto.response.TrainerCreateResponseDTO;
 import com.epam.gym.entity.dto.response.TrainerResponseDTO;
-import com.epam.gym.entity.dto.response.TrainingResponseDTO;
-import com.epam.gym.exception.EntityNotFoundException;
+import com.epam.gym.entity.dto.response.TrainerTrainingDTO;
+import com.epam.gym.exception.ResourceCreationException;
+import com.epam.gym.exception.ResourceNotFoundException;
 import com.epam.gym.mapper.TrainerMapper;
-import com.epam.gym.mapper.UserMapper;
+import com.epam.gym.mapper.TrainingMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,74 +24,60 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class TrainerService {
+
     private final TrainerDAO trainerDAO;
-    private final TraineeDAO traineeDAO;
-    private final TrainingDAO trainingDAO;
     private final UserService userService;
     private final TrainerMapper trainerMapper;
-    private final UserMapper userMapper;
-    private final TrainingService trainingService;
+    private final TrainingMapper trainingMapper;
 
-    public TrainerResponseDTO create(TrainerRequestDTO trainerRequestDTO) {
-        log.info("Creating trainer: {}, {}",
-                trainerRequestDTO.getUser().getFirstName(),
-                trainerRequestDTO.getUser().getLastName());
-        var user = userService.create(trainerRequestDTO.getUser());
-        var trainer = trainerMapper.toTrainer(trainerRequestDTO, user);
-        trainer.setTrainees(traineeDAO.getByIds(trainerRequestDTO.getTraineeIds()));
-        trainer.setTrainings(trainingDAO.getByIds(trainerRequestDTO.getTrainingIds()));
-        return trainerMapper.toTrainerResponseDTO(trainerDAO.create(trainer));
+
+    @Transactional
+    public TrainerCreateResponseDTO create(TrainerRequestDTO trainerRequestDTO) {
+        log.info("Creating trainer: {}, {}", trainerRequestDTO.getFirstName(), trainerRequestDTO.getLastName());
+        var user = userService.create(trainerRequestDTO.getFirstName(), trainerRequestDTO.getLastName());
+        var trainer = trainerDAO.create(trainerMapper.toTrainer(trainerRequestDTO, user))
+                .orElseThrow(() -> new ResourceCreationException(Trainer.class));
+        return trainerMapper.toTrainerCreateResponseDTO(trainer);
+    }
+
+    @Transactional(readOnly = true)
+    public TrainerResponseDTO getById(Long id) {
+        log.info("Getting trainer with id: {}", id);
+        var trainer = trainerDAO.getById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Trainer.class, id));
+        return trainerMapper.toTrainerResponseDTO(trainer);
     }
 
     public TrainerResponseDTO update(TrainerUpdateDTO trainerUpdateDTO) {
-        log.info("Updating trainer: {}, {}",
-                trainerUpdateDTO.getUser().getFirstName(),
-                trainerUpdateDTO.getUser().getLastName());
-        var trainer = trainerDAO.getById(trainerUpdateDTO.getId());
-        if (trainer != null) {
-            UserUpdateDTO userUpdateDTO = (UserUpdateDTO) trainerUpdateDTO.getUser();
-            User user = userMapper.toUser(userService.update(userUpdateDTO));
-            trainer.setUser(user);
-        }
-        return trainerMapper.toTrainerResponseDTO(trainerDAO.update(trainer));
+        log.info("Updating trainer with id: {}", trainerUpdateDTO.getId());
+        var trainer = trainerDAO.getById(trainerUpdateDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(Trainer.class, trainerUpdateDTO.getId()));
+        var updatedTrainer = trainerDAO.update(trainerMapper.toTrainer(trainerUpdateDTO, trainer));
+        return trainerMapper.toTrainerResponseDTO(updatedTrainer);
     }
 
-    public TrainerResponseDTO getByUsername(String username) {
-        log.info("Getting trainee by username: {}", username);
-        return trainerMapper.toTrainerResponseDTO(trainerDAO.getByUsername(username));
+    @Transactional(readOnly = true)
+    public List<Trainer> getByIds(List<Long> trainerIds) {
+        return trainerDAO.getByIds(trainerIds);
     }
 
-    public void changePassword(ChangePasswordDTO changePasswordDTO) {
-        log.info("Changing password for trainee with id: {}", changePasswordDTO.getId());
-        var trainer = trainerDAO.getById(changePasswordDTO.getId());
-        userService.changePassword(changePasswordDTO, trainer.getUser());
+    @Transactional(readOnly = true)
+    public List<TrainerTrainingDTO> getTrainings(Long id) {
+        var trainer = trainerDAO.getById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Trainer.class, id));
+        return trainer.getTrainings().stream()
+                .map(item -> trainingMapper.toTrainerTrainingDTO(item, trainer.getUser().getUsername()))
+                .toList();
+    }
+
+    @Transactional
+    public void toggleActive(ToggleActiveDTO toggleActiveDTO) {
+        log.info("Activating trainer with id: {}", toggleActiveDTO.getId());
+        var trainer = trainerDAO.getById(toggleActiveDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(Trainer.class, toggleActiveDTO.getId()));
+        trainer.getUser().setIsActive(toggleActiveDTO.getIsActive());
+        trainerDAO.update(trainer);
     }
 
 
-    public TrainerResponseDTO getById(Long id) {
-        log.info("Getting trainer with id: {}", id);
-        return trainerMapper.toTrainerResponseDTO(trainerDAO.getById(id));
-    }
-
-    public void activate(Long id, boolean isActive) {
-        log.info("Activating trainer with id: {}", id);
-        var trainer = trainerDAO.getById(id);
-        if (trainer != null) {
-            trainer.getUser().setIsActive(isActive);
-            trainerDAO.update(trainer);
-        }
-    }
-
-    public List<TrainingResponseDTO> getTrainingsByUsernameAndDuration(String username, Integer durationFrom, Integer durationTo) {
-        return trainingService.getTrainingsByUsernameAndDuration(username, durationFrom, durationTo);
-    }
-
-    public TrainerResponseDTO findByUsernameAndPassword(String username, String password) {
-        log.info("Getting trainer by username and password: {}", username);
-        var trainer = trainerDAO.findByUsernameAndPassword(username, password);
-        if (trainer == null) {
-            throw new EntityNotFoundException("Trainer not found");
-        }
-        return trainerMapper.toTrainerResponseDTO(trainer);
-    }
 }

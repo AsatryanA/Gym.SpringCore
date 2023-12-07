@@ -11,5 +11,7 @@ public class GymFacade {
     private final TrainerService trainerService;
     private final TraineeService traineeService;
     private final TrainingService trainingService;
+    private final TrainingTypeService trainingTypeService;
+    private final UserService userService;
 }
 

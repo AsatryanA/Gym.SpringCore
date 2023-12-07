@@ -3,10 +3,8 @@ package com.epam.gym.service;
 import com.epam.gym.dao.UserDAO;
 import com.epam.gym.entity.User;
 import com.epam.gym.entity.dto.request.ChangePasswordDTO;
-import com.epam.gym.entity.dto.request.UserRequestDTO;
-import com.epam.gym.entity.dto.request.UserUpdateDTO;
-import com.epam.gym.entity.dto.response.UserResponseDTO;
-import com.epam.gym.mapper.UserMapper;
+import com.epam.gym.entity.dto.request.LoginDTO;
+import com.epam.gym.exception.ResourceNotFoundException;
 import com.epam.gym.util.PasswordGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,42 +14,36 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class UserService {
 
     private final UserDAO userDAO;
-    private final UserMapper userMapper;
+    private static final boolean DEFAULT_IS_ACTIVE = true;
 
-    public User create(UserRequestDTO userRequestDTO) {
+    @Transactional
+    public User create(String firstName, String lastName) {
         return User.builder()
-                .firstName(userRequestDTO.getFirstName())
-                .lastName(userRequestDTO.getLastName())
-                .username(generateUsername(userRequestDTO.getFirstName(), userRequestDTO.getLastName()))
+                .firstName(firstName)
+                .lastName(lastName)
+                .username(generateUsername(firstName, lastName))
                 .password(generatePassword())
-                .isActive(true)
+                .isActive(DEFAULT_IS_ACTIVE)
                 .build();
     }
 
-    public UserResponseDTO update(UserUpdateDTO userUpdateDTO) {
-        var user = userMapper.toUser(userUpdateDTO);
-        user.setId(userUpdateDTO.getId());
-        user.setUsername(generateUsername(user.getFirstName(), user.getLastName()));
-        return userMapper.toUserResponseDto(userDAO.update(user));
+    @Transactional(readOnly = true)
+    public void login(LoginDTO loginDTO) {
+        log.info("Logging in user with username: {}", loginDTO.getUsername());
+        userDAO.login(loginDTO).orElseThrow(() -> new ResourceNotFoundException(User.class, loginDTO.getUsername()));
     }
 
-    public void changePassword(ChangePasswordDTO changePasswordDTO, User user) {
+    @Transactional
+    public void changePassword(ChangePasswordDTO changePasswordDTO) {
         log.info("Changing password for user with id: {}", changePasswordDTO.getId());
-        if (user != null && (user.getPassword().equals(changePasswordDTO.getOldPassword()))) {
+        var user = userDAO.getById(changePasswordDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(User.class, changePasswordDTO.getId()));
+        if (user.getPassword().equals(changePasswordDTO.getOldPassword())) {
             user.setPassword(changePasswordDTO.getNewPassword());
-            userDAO.update(user);
-        }
-    }
-
-    public void activate(Long id, boolean isActive) {
-        var user = userDAO.getById(id);
-        if (user != null) {
-            user.setIsActive(isActive);
-            userDAO.update(user);
+            userDAO.update(user).orElseThrow(() -> new ResourceNotFoundException(User.class, user.getId()));
         }
     }
 
@@ -71,3 +63,4 @@ public class UserService {
         return PasswordGenerator.generateRandomPassword();
     }
 }
+

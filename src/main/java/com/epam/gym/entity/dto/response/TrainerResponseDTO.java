@@ -1,11 +1,11 @@
 package com.epam.gym.entity.dto.response;
 
+import com.epam.gym.entity.TrainingType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.List;
 
@@ -15,9 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TrainerResponseDTO {
-    private Long id;
-    private UserResponseDTO user;
-    private List<Long> traineeIds;
-    private List<Long> trainingIds;
-    private TrainingTypeResponseDTO specialization;
+    private String firstName;
+    private String lastName;
+    private TrainingType specialization;
+    private boolean isActive;
+    private List<TrainerTraineeResponseDTO> trainees;
 }

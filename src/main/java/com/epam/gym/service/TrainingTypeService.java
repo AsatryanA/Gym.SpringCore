@@ -19,14 +19,9 @@ public class TrainingTypeService {
     private final TrainingTypeDAO trainingTypeDAO;
     private final TrainingTypeMapper trainingTypeMapper;
 
-    public TrainingTypeResponseDTO getById(Long id) {
-        log.info("Getting training type with id: {}", id);
-        return trainingTypeMapper.toTrainingTypeResponseDto(trainingTypeDAO.getById(id));
-    }
-
+    @Transactional(readOnly = true)
     public List<TrainingTypeResponseDTO> getAll() {
         log.info("Getting all training types");
-        return trainingTypeDAO.getAll().stream()
-                .map(trainingTypeMapper::toTrainingTypeResponseDto).toList();
+        return trainingTypeDAO.getAll().stream().map(trainingTypeMapper::toTrainingTypeResponseDto).toList();
     }
 }

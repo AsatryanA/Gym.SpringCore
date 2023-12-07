@@ -1,6 +1,5 @@
 package com.epam.gym.entity.dto.request;
 
-import com.epam.gym.entity.TrainingType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,13 +11,11 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @SuperBuilder
-@AllArgsConstructor
 @NoArgsConstructor
-public class TrainerRequestDTO {
+@AllArgsConstructor
+public class ToggleActiveDTO {
     @NotNull
-    private String firstName;
+    private Long id;
     @NotNull
-    private String lastName;
-    @NotNull
-    private TrainingType specialization;
+    private Boolean isActive;
 }

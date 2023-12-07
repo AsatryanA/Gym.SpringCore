@@ -6,19 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TraineeResponseDTO {
+public class TrainerTraineeResponseDTO {
     private String firstName;
     private String lastName;
-    private LocalDate dateOfBirth;
-    private String address;
-    private boolean isActive;
-    private List<TraineeTrainersResponseDTO> trainers;
+    private String username;
 }

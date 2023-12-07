@@ -1,17 +1,21 @@
 package com.epam.gym.entity.dto.request;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@SuperBuilder
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
-public class UserUpdateDTO extends UserRequestDTO {
-    private Long id;
+@AllArgsConstructor
+public class LoginDTO {
+    @NotNull
+    private String username;
+    @NotNull
     private String password;
 }

@@ -1,8 +1,7 @@
-insert into training_types (id, name)
-values (51, 'Cardio'),
-       (52, 'Strength Training'),
-       (53, 'Yoga'),
-       (54, 'Martial Arts'),
-       (55, 'HIIT');
-
+INSERT INTO training_types (name)
+VALUES ('Cardio'),
+       ('Strength Training'),
+       ('Yoga'),
+       ('Martial Arts'),
+       ('HIIT');
 

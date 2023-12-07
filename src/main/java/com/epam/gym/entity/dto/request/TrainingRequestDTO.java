@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
 @Getter
@@ -14,10 +16,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TrainingRequestDTO {
+    @NotNull
     private Long traineeId;
+    @NotNull
     private Long trainerId;
+    @NotNull
     private String name;
-    private Long trainingTypeId;
+    @NotNull
     private LocalDate date;
+    @NotNull
+    @Positive
     private Integer duration;
 }

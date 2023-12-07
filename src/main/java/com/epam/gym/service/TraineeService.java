@@ -1,15 +1,18 @@
 package com.epam.gym.service;
 
 import com.epam.gym.dao.TraineeDAO;
-import com.epam.gym.dao.TrainerDAO;
-import com.epam.gym.dao.TrainingDAO;
-import com.epam.gym.entity.dto.request.ChangePasswordDTO;
+import com.epam.gym.entity.Trainee;
+import com.epam.gym.entity.dto.request.ToggleActiveDTO;
 import com.epam.gym.entity.dto.request.TraineeRequestDTO;
-import com.epam.gym.entity.dto.request.TraineeTrainersUpdateDTO;
+import com.epam.gym.entity.dto.request.TraineeUpdateDTO;
+import com.epam.gym.entity.dto.response.TraineeCreateResponseDTO;
 import com.epam.gym.entity.dto.response.TraineeResponseDTO;
-import com.epam.gym.entity.dto.response.TrainingResponseDTO;
-import com.epam.gym.exception.EntityNotFoundException;
+import com.epam.gym.entity.dto.response.TraineeTrainersResponseDTO;
+import com.epam.gym.entity.dto.response.TraineeTrainingDTO;
+import com.epam.gym.exception.ResourceCreationException;
+import com.epam.gym.exception.ResourceNotFoundException;
 import com.epam.gym.mapper.TraineeMapper;
+import com.epam.gym.mapper.TrainingMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,80 +26,70 @@ import java.util.List;
 @Transactional
 public class TraineeService {
 
-    private final TraineeDAO traineeDAO;
-    private final TrainingDAO trainingDAO;
-    private final TrainerDAO trainerDAO;
     private final UserService userService;
+    private final TrainerService trainerService;
+    private final TraineeDAO traineeDAO;
     private final TraineeMapper traineeMapper;
-    private final TrainingService trainingService;
+    private final TrainingMapper trainingMapper;
 
-
-    public TraineeResponseDTO create(TraineeRequestDTO traineeRequestDTO) {
+    @Transactional
+    public TraineeCreateResponseDTO create(TraineeRequestDTO traineeRequestDTO) {
         log.info("Creating trainee: {} , {}",
-                traineeRequestDTO.getUser().getFirstName(),
-                traineeRequestDTO.getUser().getLastName());
-        var user = userService.create(traineeRequestDTO.getUser());
-        var trainee = traineeMapper.toTrainee(traineeRequestDTO, user);
-        trainee.setTrainings(trainingDAO.getByIds((traineeRequestDTO.getTrainingIds())));
-        trainee.setTrainers(trainerDAO.getByIds(traineeRequestDTO.getTrainerIds()));
-        return traineeMapper.toTraineeResponseDTO(traineeDAO.create(trainee));
+                traineeRequestDTO.getFirstName(),
+                traineeRequestDTO.getLastName());
+        var user = userService.create(traineeRequestDTO.getFirstName(), traineeRequestDTO.getLastName());
+        var trainee = traineeDAO.create(traineeMapper.toTrainee(traineeRequestDTO, user))
+                .orElseThrow(() -> new ResourceCreationException(Trainee.class));
+        return traineeMapper.toTraineeCreateResponseDTO(trainee);
     }
 
-
-    public TraineeResponseDTO getByUsername(String username) {
-        log.info("Getting trainee by username: {}", username);
-        return traineeMapper.toTraineeResponseDTO(traineeDAO.getByUsername(username));
+    @Transactional(readOnly = true)
+    public TraineeResponseDTO getById(Long traineeId) {
+        log.info("Getting trainee with id: {}", traineeId);
+        var trainee = traineeDAO.getById(traineeId)
+                .orElseThrow(() -> new ResourceNotFoundException(Trainee.class, traineeId));
+        return traineeMapper.toTraineeResponseDTO(trainee);
     }
 
-    public void changePassword(ChangePasswordDTO changePasswordDTO) {
-        log.info("Changing password for trainee with id: {}", changePasswordDTO.getId());
-        var trainee = traineeDAO.getById(changePasswordDTO.getId());
-        userService.changePassword(changePasswordDTO, trainee.getUser());
+    @Transactional
+    public TraineeResponseDTO update(TraineeUpdateDTO traineeUpdateDTO) {
+        log.info("Updating trainee with id: {}", traineeUpdateDTO.getId());
+        var trainee = traineeDAO.getById(traineeUpdateDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(Trainee.class, traineeUpdateDTO.getId()));
+        var updatedTrainee = traineeDAO.update(traineeMapper.toTrainee(traineeUpdateDTO, trainee));
+        return traineeMapper.toTraineeResponseDTO(updatedTrainee);
     }
 
-    public void deleteByUsername(String username) {
-        log.info("Deleting trainee by username: {}", username);
-        var trainee = traineeDAO.getByUsername(username);
+    @Transactional
+    public void delete(Long id) {
+        log.info("Deleting trainee with id: {}", id);
+        var trainee = traineeDAO.getById(id).orElseThrow(() -> new ResourceNotFoundException(Trainee.class, id));
         trainee.getTrainers().forEach(trainer -> trainer.getTrainees().remove(trainee));
-        trainee.getTrainings().clear();
         trainee.getTrainers().clear();
         traineeDAO.delete(trainee);
     }
 
-    public TraineeResponseDTO getById(Long traineeId) {
-        log.info("Getting trainee with id: {}", traineeId);
-        return traineeMapper.toTraineeResponseDTO(traineeDAO.getById(traineeId));
-    }
-
-    public void activate(Long id, boolean isActive) {
-        log.info("Activating trainee with id: {}", id);
-        var trainee = traineeDAO.getById(id);
-        if (trainee != null) {
-            trainee.getUser().setIsActive(isActive);
-            traineeDAO.update(trainee);
-        }
-    }
-
-    public TraineeResponseDTO updateTrainers(TraineeTrainersUpdateDTO traineeTrainersUpdateDTO) {
+    @Transactional
+    public List<TraineeTrainersResponseDTO> updateTrainers(Long id, List<Long> trainerIds) {
         log.info("Updating trainers for trainee");
-        var trainee = traineeDAO.getById(traineeTrainersUpdateDTO.getTraineeId());
-        if (trainee == null) {
-            throw new EntityNotFoundException("Trainee not found");
-        }
-        trainee.setTrainers(trainerDAO.getByIds(traineeTrainersUpdateDTO.getTrainerIds()));
-        return traineeMapper.toTraineeResponseDTO(traineeDAO.update(trainee));
+        var trainee = traineeDAO.getById(id).orElseThrow(() -> new ResourceNotFoundException(Trainee.class, id));
+        trainee.setTrainers(trainerService.getByIds(trainerIds));
+        var updatedTrainee = traineeDAO.update(trainee);
+        return updatedTrainee.getTrainers().stream().map(traineeMapper::toTraineeTrainersResponseDTO).toList();
     }
 
-    public List<TrainingResponseDTO> getTrainingsByUsernameAndDuration(String username, Integer durationFrom, Integer durationTo) {
-        return trainingService.getTrainingsByUsernameAndDuration(username, durationFrom, durationTo);
+    @Transactional(readOnly = true)
+    public List<TraineeTrainingDTO> getTrainings(Long id) {
+        log.info("Getting trainings for trainee with id: {}", id);
+        var trainee = traineeDAO.getById(id).orElseThrow(() -> new ResourceNotFoundException(Trainee.class, id));
+        return trainee.getTrainings().stream().map(item -> trainingMapper.toTraineeTrainingDTO(item, trainee.getUser().getUsername())).toList();
     }
 
-    public TraineeResponseDTO findByUsernameAndPassword(String username, String password) {
-        log.info("Getting trainee by username: {}", username);
-        var trainee = traineeDAO.findByUsernameAndPassword(username, password);
-        if (trainee == null) {
-            throw new EntityNotFoundException("Trainee not found");
-        }
-        return traineeMapper.toTraineeResponseDTO(trainee);
+    @Transactional
+    public void toggleActive(ToggleActiveDTO toggleActiveDTO) {
+        log.info("Activating trainee with id: {}", toggleActiveDTO.getId());
+        var trainee = traineeDAO.getById(toggleActiveDTO.getId()).orElseThrow(() -> new ResourceNotFoundException(Trainee.class, toggleActiveDTO.getId()));
+        trainee.getUser().setIsActive(toggleActiveDTO.getIsActive());
+        traineeDAO.update(trainee);
     }
 }

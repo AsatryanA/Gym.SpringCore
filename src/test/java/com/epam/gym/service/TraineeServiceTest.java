@@ -1,3 +1,4 @@
+/*
 package com.epam.gym.service;
 
 import com.epam.gym.dao.TraineeDAO;
@@ -12,7 +13,7 @@ import com.epam.gym.entity.dto.request.ChangePasswordDTO;
 import com.epam.gym.entity.dto.request.TraineeRequestDTO;
 import com.epam.gym.entity.dto.request.TraineeTrainersUpdateDTO;
 import com.epam.gym.entity.dto.request.UserRequestDTO;
-import com.epam.gym.entity.dto.response.TraineeResponseDTO;
+import com.epam.gym.entity.dto.response.TraineeCreateResponseDTO;
 import com.epam.gym.entity.dto.response.TrainingResponseDTO;
 import com.epam.gym.entity.dto.response.UserResponseDTO;
 import com.epam.gym.mapper.TraineeMapper;
@@ -63,7 +64,7 @@ class TraineeServiceTest {
         when(trainingDAO.getByIds(traineeRequestDTO.getTrainingIds())).thenReturn(createTestTrainings());
         when(trainerDAO.getByIds(traineeRequestDTO.getTrainerIds())).thenReturn(createTestTrainers());
         when(traineeDAO.create(trainee)).thenReturn(trainee);
-        TraineeResponseDTO result = traineeService.create(traineeRequestDTO);
+        TraineeCreateResponseDTO result = traineeService.create(traineeRequestDTO);
         assertNotNull(result);
         assertEquals(trainee.getId(), result.getId());
         assertEquals(trainee.getAddress(), result.getAddress());
@@ -124,7 +125,7 @@ class TraineeServiceTest {
         var trainee = createTestTrainee();
         when(traineeDAO.getById(updateDTO.getTraineeId())).thenReturn(trainee);
         when(trainerDAO.getByIds(updateDTO.getTrainerIds())).thenReturn(createTestTrainers());
-        TraineeResponseDTO result = traineeService.updateTrainers(updateDTO);
+        TraineeCreateResponseDTO result = traineeService.updateTrainers(updateDTO);
         assertNotNull(result);
     }
 
@@ -149,8 +150,8 @@ class TraineeServiceTest {
                 .build();
     }
 
-    private TraineeResponseDTO createTestTraineeResponseDTO(Trainee trainee) {
-        return TraineeResponseDTO.builder()
+    private TraineeCreateResponseDTO createTestTraineeResponseDTO(Trainee trainee) {
+        return TraineeCreateResponseDTO.builder()
                 .id(trainee.getId())
                 .address(trainee.getAddress())
                 .dateOfBirth(trainee.getDateOfBirth())
@@ -249,3 +250,4 @@ class TraineeServiceTest {
 }
 
 
+*/

@@ -11,10 +11,8 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponseDTO {
+public class TrainerCreateResponseDTO {
     private Long id;
-    private String firstName;
-    private String lastName;
     private String username;
-    private Boolean isActive;
+    private String password;
 }
