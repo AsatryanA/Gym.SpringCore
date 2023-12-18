@@ -1,6 +1,6 @@
 package com.epam.gym.exception;
 
-import jakarta.persistence.EntityNotFoundException;
+import javax.persistence.EntityNotFoundException;
 
 public class ResourceNotFoundException extends EntityNotFoundException {
     public ResourceNotFoundException(Class<?> clazz, Long id) {

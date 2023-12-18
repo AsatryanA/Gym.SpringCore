@@ -1,5 +1,10 @@
-package com.epam.gym.service;
+package com.epam.gym.service.impl;
 
+import com.epam.gym.service.TraineeService;
+import com.epam.gym.service.TrainerService;
+import com.epam.gym.service.TrainingService;
+import com.epam.gym.service.TrainingTypeService;
+import com.epam.gym.service.UserService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

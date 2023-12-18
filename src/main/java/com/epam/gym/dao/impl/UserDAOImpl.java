@@ -17,17 +17,14 @@ public class UserDAOImpl implements UserDAO {
 
     private final SessionFactory sessionFactory;
 
-
     @Override
     public Optional<User> getById(Long id) {
-        log.info("Getting user with id: {}", id);
         var session = sessionFactory.getCurrentSession();
         return Optional.ofNullable(session.get(User.class, id));
     }
 
     @Override
     public Optional<User> login(LoginDTO loginDTO) {
-        log.info("Logging in user with username: {}", loginDTO.getUsername());
         var session = sessionFactory.getCurrentSession();
         var builder = session.getCriteriaBuilder();
         var criteriaQuery = builder.createQuery(User.class);
@@ -41,7 +38,6 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public Optional<User> update(User user) {
-        log.info("Updating user: {}", user);
         var session = sessionFactory.getCurrentSession();
         session.merge(user);
         return Optional.ofNullable(user);
@@ -49,8 +45,8 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean isUsernameAvailable(String username) {
-        log.info("Checking if username is available: {}", username);
         var session = sessionFactory.getCurrentSession();
-        return session.createQuery("from User where username = :username", User.class).setParameter("username", username).uniqueResult() != null;
+        return session.createQuery("from User where username = :username", User.class)
+                .setParameter("username", username).uniqueResult() != null;
     }
 }

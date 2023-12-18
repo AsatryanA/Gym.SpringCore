@@ -12,11 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -35,7 +35,7 @@ public class TrainerController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<TrainerResponseDTO> getById(@Valid @RequestParam Long id) {
+    ResponseEntity<TrainerResponseDTO> getById(@Valid @PathVariable Long id) {
         return new ResponseEntity<>(trainerService.getById(id), HttpStatus.OK);
     }
 
@@ -45,7 +45,7 @@ public class TrainerController {
     }
 
     @GetMapping("/{id}/trainings")
-    ResponseEntity<List<TrainerTrainingDTO>> getTrainings(@Valid @RequestParam Long id) {
+    ResponseEntity<List<TrainerTrainingDTO>> getTrainings(@Valid @PathVariable Long id) {
         return new ResponseEntity<>(trainerService.getTrainings(id), HttpStatus.OK);
     }
 
@@ -54,5 +54,4 @@ public class TrainerController {
         trainerService.toggleActive(toggleActiveDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

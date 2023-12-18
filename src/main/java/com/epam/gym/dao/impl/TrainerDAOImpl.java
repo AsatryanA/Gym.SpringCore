@@ -19,9 +19,6 @@ public class TrainerDAOImpl implements TrainerDAO {
 
     @Override
     public Optional<Trainer> create(Trainer trainer) {
-        log.info("Creating trainer: {} , {}",
-                trainer.getUser().getFirstName(),
-                trainer.getUser().getLastName());
         var session = sessionFactory.getCurrentSession();
         session.persist(trainer);
         if (trainer.getId() == null) {
@@ -32,7 +29,6 @@ public class TrainerDAOImpl implements TrainerDAO {
 
     @Override
     public Optional<Trainer> getById(Long id) {
-        log.info("Getting trainer with id: {}", id);
         var session = sessionFactory.getCurrentSession();
         return Optional.ofNullable(session.get(Trainer.class, id));
     }
@@ -40,14 +36,12 @@ public class TrainerDAOImpl implements TrainerDAO {
     @Override
     public Trainer update(Trainer trainer) {
         var currentSession = sessionFactory.getCurrentSession();
-        log.info("Updating trainer: {}", trainer.getUser().getUsername());
         currentSession.merge(trainer);
         return trainer;
     }
 
     @Override
     public List<Trainer> getByIds(List<Long> trainerIds) {
-        log.info("Getting trainers by ids: {}", trainerIds);
         var session = sessionFactory.getCurrentSession();
         return session.createQuery("from Trainer where id in (:ids)", Trainer.class)
                 .setParameterList("ids", trainerIds)

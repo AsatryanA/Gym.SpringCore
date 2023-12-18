@@ -46,7 +46,7 @@ class TraineeServiceTest {
     private TrainerDAO trainerDAO;
 
     @Mock
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Mock
     private TraineeMapper traineeMapper;

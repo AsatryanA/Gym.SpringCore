@@ -18,9 +18,6 @@ public class TraineeDAOImpl implements TraineeDAO {
 
     @Override
     public Optional<Trainee> create(Trainee trainee) {
-        log.info("Creating trainee: {} , {}",
-                trainee.getUser().getFirstName(),
-                trainee.getUser().getLastName());
         var session = sessionFactory.getCurrentSession();
         session.persist(trainee);
         if (trainee.getId() == null) {
@@ -31,21 +28,18 @@ public class TraineeDAOImpl implements TraineeDAO {
 
     @Override
     public Optional<Trainee> getById(Long id) {
-        log.info("Getting trainee by id: {}", id);
         var session = sessionFactory.getCurrentSession();
         return Optional.ofNullable(session.get(Trainee.class, id));
     }
 
     @Override
     public Trainee update(Trainee trainee) {
-        log.info("Updating trainee: {} , {}", trainee.getUser().getFirstName(), trainee.getUser().getLastName());
         var session = sessionFactory.getCurrentSession();
         session.merge(trainee);
         return trainee;
     }
 
     public void delete(Trainee trainee) {
-        log.info("Deleting trainee: {} , {}", trainee.getUser().getFirstName(), trainee.getUser().getLastName());
         var session = sessionFactory.getCurrentSession();
         session.remove(trainee);
     }

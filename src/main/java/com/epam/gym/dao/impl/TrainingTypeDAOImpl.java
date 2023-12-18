@@ -18,7 +18,6 @@ public class TrainingTypeDAOImpl implements TrainingTypeDAO {
 
     @Override
     public List<TrainingType> getAll() {
-        log.info("Getting all training types");
         var session = sessionFactory.getCurrentSession();
         return session.createQuery("from TrainingType", TrainingType.class)
                 .list();

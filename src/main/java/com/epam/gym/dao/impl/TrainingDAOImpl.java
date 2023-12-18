@@ -16,8 +16,6 @@ public class TrainingDAOImpl implements TrainingDAO {
 
     @Override
     public void create(Training training) {
-        log.info("Creating training: {}",
-                training.getTrainer().getUser().getUsername());
         var session = sessionFactory.getCurrentSession();
         session.persist(training);
     }
