@@ -9,6 +9,7 @@ import com.epam.gym.entity.dto.response.TraineeCreateResponseDTO;
 import com.epam.gym.entity.dto.response.TraineeResponseDTO;
 import com.epam.gym.entity.dto.response.TraineeTrainersResponseDTO;
 import com.epam.gym.entity.dto.response.TraineeTrainingDTO;
+import com.epam.gym.exception.DuplicateException;
 import com.epam.gym.exception.ResourceCreationException;
 import com.epam.gym.exception.ResourceNotFoundException;
 import com.epam.gym.mapper.TraineeMapper;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -87,7 +89,11 @@ public class TraineeServiceImpl implements TraineeService {
     @Transactional
     public void toggleActive(ToggleActiveDTO toggleActiveDTO) {
         log.info("Activating trainee with id: {}", toggleActiveDTO.getId());
-        var trainee = traineeDAO.getById(toggleActiveDTO.getId()).orElseThrow(() -> new ResourceNotFoundException(Trainee.class, toggleActiveDTO.getId()));
+        var trainee = traineeDAO.getById(toggleActiveDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(Trainee.class, toggleActiveDTO.getId()));
+        if (Objects.equals(trainee.getUser().getIsActive(), toggleActiveDTO.getIsActive())) {
+            throw new DuplicateException("Your Activation status already" + toggleActiveDTO.getIsActive());
+        }
         trainee.getUser().setIsActive(toggleActiveDTO.getIsActive());
         traineeDAO.update(trainee);
     }

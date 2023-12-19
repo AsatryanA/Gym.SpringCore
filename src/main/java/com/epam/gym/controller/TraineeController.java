@@ -8,8 +8,6 @@ import com.epam.gym.entity.dto.response.TraineeResponseDTO;
 import com.epam.gym.entity.dto.response.TraineeTrainersResponseDTO;
 import com.epam.gym.entity.dto.response.TraineeTrainingDTO;
 import com.epam.gym.service.TraineeService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -29,13 +28,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/trainees")
-@Api(value = "/api/v1/trainees", tags = "/api/v1/trainees")
 public class TraineeController {
 
     private final TraineeService traineeService;
 
     @PostMapping
-    @ApiOperation(value = "Create Trainee", response = TraineeCreateResponseDTO.class)
+    @ResponseStatus(HttpStatus.CREATED)
     ResponseEntity<TraineeCreateResponseDTO> create(@Valid @RequestBody TraineeRequestDTO traineeRequestDTO) {
         return new ResponseEntity<>(traineeService.create(traineeRequestDTO), HttpStatus.CREATED);
     }

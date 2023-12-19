@@ -8,6 +8,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -21,5 +22,11 @@ public class TrainingTypeDAOImpl implements TrainingTypeDAO {
         var session = sessionFactory.getCurrentSession();
         return session.createQuery("from TrainingType", TrainingType.class)
                 .list();
+    }
+
+    @Override
+    public Optional<TrainingType> getById(Long id) {
+        var session = sessionFactory.getCurrentSession();
+        return Optional.ofNullable(session.get(TrainingType.class, id));
     }
 }

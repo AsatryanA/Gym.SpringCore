@@ -8,6 +8,6 @@ public class ResourceNotFoundException extends EntityNotFoundException {
     }
 
     public ResourceNotFoundException(Class<?> clazz, String username) {
-        super(String.format("%s with id %s not found", clazz.getSimpleName(), username));
+        super(String.format("%s with username %s not found", clazz.getSimpleName(), username));
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
@@ -40,14 +39,22 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ResponseEntity<String> handleEntityNotFoundException(ResourceNotFoundException e) {
         return new ResponseEntity<>(String.format(e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleEntityNotFoundException() {
+        return new ResponseEntity<>("Something Went Wrong, Please try Later", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(ResourceCreationException.class)
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleEntityCreationException(ResourceCreationException e) {
-        return new ResponseEntity<>(String.format(e.getMessage()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(String.format(e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DuplicateException.class)
+    public ResponseEntity<String> handleEntityCreationException(DuplicateException e) {
+        return new ResponseEntity<>(String.format(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }
