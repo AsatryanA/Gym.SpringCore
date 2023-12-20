@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +41,7 @@ class TrainingTypeDAOTest {
         Query<TrainingType> query = mock(Query.class);
         when(session.createQuery("from TrainingType", TrainingType.class)).thenReturn(query);
         when(session.createQuery("from TrainingType", TrainingType.class).list()).thenReturn(trainingTypes);
-        List<TrainingType> result = trainingTypeDAO.getAll();
+        List<TrainingType> result = trainingTypeDAO.getAll(Pageable.unpaged());
         assertEquals(trainingTypes, result);
     }
 }

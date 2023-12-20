@@ -53,8 +53,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(String.format(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(DuplicateException.class)
-    public ResponseEntity<String> handleEntityCreationException(DuplicateException e) {
-        return new ResponseEntity<>(String.format(e.getMessage()), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(VerificationException.class)
+    public ResponseEntity<String> handleEntityCreationException(VerificationException e) {
+        return new ResponseEntity<>(String.format(e.getMessage()), HttpStatus.FORBIDDEN);
     }
 }

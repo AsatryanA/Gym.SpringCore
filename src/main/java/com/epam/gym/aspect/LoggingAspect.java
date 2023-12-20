@@ -49,7 +49,7 @@ public class LoggingAspect {
     @Before("springBeanPointcut() && createMethods()")
     public void logCreate(JoinPoint joinPoint) {
         var methodName = joinPoint.getSignature().getName();
-        Object[] args = joinPoint.getArgs();
+        var args = joinPoint.getArgs();
         log.info("c: {} with first name and last name: {}", methodName, args[1]);
     }
 

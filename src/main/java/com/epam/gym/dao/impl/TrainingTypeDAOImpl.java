@@ -5,6 +5,8 @@ import com.epam.gym.entity.TrainingType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,10 +20,12 @@ public class TrainingTypeDAOImpl implements TrainingTypeDAO {
     private final SessionFactory sessionFactory;
 
     @Override
-    public List<TrainingType> getAll() {
+    public List<TrainingType> getAll(Pageable pageable) {
         var session = sessionFactory.getCurrentSession();
-        return session.createQuery("from TrainingType", TrainingType.class)
-                .list();
+        Query<TrainingType> query = session.createQuery("FROM TrainingType", TrainingType.class);
+        query.setFirstResult((int) pageable.getOffset());
+        query.setMaxResults(pageable.getPageSize());
+        return query.getResultList();
     }
 
     @Override

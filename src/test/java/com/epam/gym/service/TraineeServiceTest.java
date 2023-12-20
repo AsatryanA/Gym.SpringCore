@@ -9,7 +9,7 @@ import com.epam.gym.entity.Trainer;
 import com.epam.gym.entity.Training;
 import com.epam.gym.entity.TrainingType;
 import com.epam.gym.entity.User;
-import com.epam.gym.entity.dto.request.ChangePasswordDTO;
+import com.epam.gym.entity.dto.request.ChangeLoginDTO;
 import com.epam.gym.entity.dto.request.TraineeRequestDTO;
 import com.epam.gym.entity.dto.request.TraineeTrainersUpdateDTO;
 import com.epam.gym.entity.dto.request.UserRequestDTO;
@@ -161,8 +161,8 @@ class TraineeServiceTest {
                 .build();
     }
 
-    private ChangePasswordDTO createTestChangePasswordDTO() {
-        return ChangePasswordDTO.builder()
+    private ChangeLoginDTO createTestChangePasswordDTO() {
+        return ChangeLoginDTO.builder()
                 .id(1L)
                 .newPassword("newPassword")
                 .oldPassword("oldPassword")

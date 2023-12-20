@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
@@ -35,7 +36,7 @@ public class TrainerController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<TrainerResponseDTO> getById(@Valid @PathVariable Long id) {
+    ResponseEntity<TrainerResponseDTO> getById(@PathVariable @Positive Long id) {
         return new ResponseEntity<>(trainerService.getById(id), HttpStatus.OK);
     }
 
@@ -45,13 +46,13 @@ public class TrainerController {
     }
 
     @GetMapping("/{id}/trainings")
-    ResponseEntity<List<TrainerTrainingDTO>> getTrainings(@Valid @PathVariable Long id) {
+    ResponseEntity<List<TrainerTrainingDTO>> getTrainings(@PathVariable @Positive Long id) {
         return new ResponseEntity<>(trainerService.getTrainings(id), HttpStatus.OK);
     }
 
     @PatchMapping("/toggle-active")
     ResponseEntity<Void> toggleActive(@Valid @RequestBody ToggleActiveDTO toggleActiveDTO) {
         trainerService.toggleActive(toggleActiveDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }

@@ -19,10 +19,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
@@ -33,13 +34,12 @@ public class TraineeController {
     private final TraineeService traineeService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     ResponseEntity<TraineeCreateResponseDTO> create(@Valid @RequestBody TraineeRequestDTO traineeRequestDTO) {
         return new ResponseEntity<>(traineeService.create(traineeRequestDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<TraineeResponseDTO> getById(@Valid @PathVariable Long id) {
+    ResponseEntity<TraineeResponseDTO> getById(@PathVariable @Positive Long id) {
         return new ResponseEntity<>(traineeService.getById(id), HttpStatus.OK);
     }
 
@@ -49,24 +49,24 @@ public class TraineeController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@Valid @PathVariable Long id) {
+    ResponseEntity<Void> delete(@PathVariable @Positive Long id) {
         traineeService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}/trainers")
-    ResponseEntity<List<TraineeTrainersResponseDTO>> updateTrainers(@Valid @PathVariable Long id, @Valid @RequestBody List<Long> trainerIds) {
+    ResponseEntity<List<TraineeTrainersResponseDTO>> updateTrainers(@PathVariable @Positive Long id, @RequestBody @NotNull List<Long> trainerIds) {
         return new ResponseEntity<>(traineeService.updateTrainers(id, trainerIds), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/trainings")
-    ResponseEntity<List<TraineeTrainingDTO>> getTrainings(@Valid @PathVariable Long id) {
+    ResponseEntity<List<TraineeTrainingDTO>> getTrainings(@PathVariable @Positive Long id) {
         return new ResponseEntity<>(traineeService.getTrainings(id), HttpStatus.OK);
     }
 
     @PatchMapping("/toggle-active")
     ResponseEntity<Void> toggleActive(@Valid @RequestBody ToggleActiveDTO toggleActiveDTO) {
         traineeService.toggleActive(toggleActiveDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }

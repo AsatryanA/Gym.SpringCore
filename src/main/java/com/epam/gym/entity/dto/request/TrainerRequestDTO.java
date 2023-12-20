@@ -21,5 +21,5 @@ public class TrainerRequestDTO {
     private String lastName;
     @NotNull
     private TrainingType specialization;
-    
+
 }

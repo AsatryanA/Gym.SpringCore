@@ -8,6 +8,7 @@ import com.epam.gym.mapper.TrainingTypeMapper;
 import com.epam.gym.service.TrainingTypeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +22,10 @@ public class TrainingTypeServiceImpl implements TrainingTypeService {
     private final TrainingTypeDAO trainingTypeDAO;
     private final TrainingTypeMapper trainingTypeMapper;
 
-    @Transactional(readOnly = true)
-    public List<TrainingTypeResponseDTO> getAll() {
+    @Transactional
+    public List<TrainingTypeResponseDTO> getAll(Pageable pageable) {
         log.info("Getting all training types");
-        return trainingTypeDAO.getAll().stream().map(trainingTypeMapper::toTrainingTypeResponseDto).toList();
+        return trainingTypeDAO.getAll(pageable).stream().map(trainingTypeMapper::toTrainingTypeResponseDto).toList();
     }
 
     @Override

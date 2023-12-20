@@ -2,7 +2,7 @@ package com.epam.gym.service.impl;
 
 import com.epam.gym.dao.UserDAO;
 import com.epam.gym.entity.User;
-import com.epam.gym.entity.dto.request.ChangePasswordDTO;
+import com.epam.gym.entity.dto.request.ChangeLoginDTO;
 import com.epam.gym.entity.dto.request.LoginDTO;
 import com.epam.gym.exception.ResourceNotFoundException;
 import com.epam.gym.service.UserService;
@@ -31,19 +31,19 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void login(LoginDTO loginDTO) {
         log.info("Logging in user with username: {}", loginDTO.getUsername());
         userDAO.login(loginDTO).orElseThrow(() -> new ResourceNotFoundException(User.class, loginDTO.getUsername()));
     }
 
     @Transactional
-    public void changePassword(ChangePasswordDTO changePasswordDTO) {
-        log.info("Changing password for user with id: {}", changePasswordDTO.getId());
-        var user = userDAO.getById(changePasswordDTO.getId())
-                .orElseThrow(() -> new ResourceNotFoundException(User.class, changePasswordDTO.getId()));
-        if (user.getPassword().equals(changePasswordDTO.getOldPassword())) {
-            user.setPassword(changePasswordDTO.getNewPassword());
+    public void changeLogin(ChangeLoginDTO changeLoginDTO) {
+        log.info("Changing password for user with id: {}", changeLoginDTO.getId());
+        var user = userDAO.getById(changeLoginDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(User.class, changeLoginDTO.getId()));
+        if (user.getPassword().equals(changeLoginDTO.getOldPassword())) {
+            user.setPassword(changeLoginDTO.getNewPassword());
             userDAO.update(user).orElseThrow(() -> new ResourceNotFoundException(User.class, user.getId()));
         }
     }

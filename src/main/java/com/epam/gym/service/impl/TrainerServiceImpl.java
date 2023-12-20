@@ -8,9 +8,9 @@ import com.epam.gym.entity.dto.request.TrainerUpdateDTO;
 import com.epam.gym.entity.dto.response.TrainerCreateResponseDTO;
 import com.epam.gym.entity.dto.response.TrainerResponseDTO;
 import com.epam.gym.entity.dto.response.TrainerTrainingDTO;
-import com.epam.gym.exception.DuplicateException;
 import com.epam.gym.exception.ResourceCreationException;
 import com.epam.gym.exception.ResourceNotFoundException;
+import com.epam.gym.exception.VerificationException;
 import com.epam.gym.mapper.TrainerMapper;
 import com.epam.gym.mapper.TrainingMapper;
 import com.epam.gym.service.TrainerService;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Service
@@ -45,7 +44,7 @@ public class TrainerServiceImpl implements TrainerService {
         return trainerMapper.toTrainerCreateResponseDTO(trainer);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public TrainerResponseDTO getById(Long id) {
         var trainer = trainerDAO.getById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Trainer.class, id));
@@ -60,12 +59,12 @@ public class TrainerServiceImpl implements TrainerService {
         return trainerMapper.toTrainerResponseDTO(updatedTrainer);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Trainer> getByIds(List<Long> trainerIds) {
         return trainerDAO.getByIds(trainerIds);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<TrainerTrainingDTO> getTrainings(Long id) {
         var trainer = trainerDAO.getById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Trainer.class, id));
@@ -79,8 +78,8 @@ public class TrainerServiceImpl implements TrainerService {
         log.info("Activating trainer with id: {}", toggleActiveDTO.getId());
         var trainer = trainerDAO.getById(toggleActiveDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(Trainer.class, toggleActiveDTO.getId()));
-        if (Objects.equals(trainer.getUser().getIsActive(), toggleActiveDTO.getIsActive())) {
-            throw new DuplicateException("Your Activation status already" + toggleActiveDTO.getIsActive());
+        if (Boolean.FALSE.equals(trainer.getUser().getIsActive())) {
+            throw new VerificationException("This user account is currently deactivated. Please contact support for further assistance");
         }
         trainer.getUser().setIsActive(toggleActiveDTO.getIsActive());
         trainerDAO.update(trainer);

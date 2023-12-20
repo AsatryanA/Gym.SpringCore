@@ -17,7 +17,7 @@ public class InitData {
 
     @PostConstruct
     public void initializeDatabase() {
-        final String traineeCountQuery = "SELECT COUNT(*) FROM training_types";
+        final var traineeCountQuery = "SELECT COUNT(*) FROM training_types";
         try {
             var rowCount = jdbcTemplate.queryForObject(traineeCountQuery, Integer.class);
             if (rowCount != null && rowCount == 0) {

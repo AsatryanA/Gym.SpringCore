@@ -9,9 +9,9 @@ import com.epam.gym.entity.dto.response.TraineeCreateResponseDTO;
 import com.epam.gym.entity.dto.response.TraineeResponseDTO;
 import com.epam.gym.entity.dto.response.TraineeTrainersResponseDTO;
 import com.epam.gym.entity.dto.response.TraineeTrainingDTO;
-import com.epam.gym.exception.DuplicateException;
 import com.epam.gym.exception.ResourceCreationException;
 import com.epam.gym.exception.ResourceNotFoundException;
+import com.epam.gym.exception.VerificationException;
 import com.epam.gym.mapper.TraineeMapper;
 import com.epam.gym.mapper.TrainingMapper;
 import com.epam.gym.service.TraineeService;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Service
@@ -45,7 +44,7 @@ public class TraineeServiceImpl implements TraineeService {
         return traineeMapper.toTraineeCreateResponseDTO(trainee);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public TraineeResponseDTO getById(Long traineeId) {
         var trainee = traineeDAO.getById(traineeId)
                 .orElseThrow(() -> new ResourceNotFoundException(Trainee.class, traineeId));
@@ -79,7 +78,7 @@ public class TraineeServiceImpl implements TraineeService {
         return updatedTrainee.getTrainers().stream().map(traineeMapper::toTraineeTrainersResponseDTO).toList();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<TraineeTrainingDTO> getTrainings(Long id) {
         log.info("Getting trainings for trainee with id: {}", id);
         var trainee = traineeDAO.getById(id).orElseThrow(() -> new ResourceNotFoundException(Trainee.class, id));
@@ -91,8 +90,8 @@ public class TraineeServiceImpl implements TraineeService {
         log.info("Activating trainee with id: {}", toggleActiveDTO.getId());
         var trainee = traineeDAO.getById(toggleActiveDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(Trainee.class, toggleActiveDTO.getId()));
-        if (Objects.equals(trainee.getUser().getIsActive(), toggleActiveDTO.getIsActive())) {
-            throw new DuplicateException("Your Activation status already" + toggleActiveDTO.getIsActive());
+        if (Boolean.FALSE.equals(trainee.getUser().getIsActive())) {
+            throw new VerificationException("This user account is currently deactivated. Please contact support for further assistance");
         }
         trainee.getUser().setIsActive(toggleActiveDTO.getIsActive());
         traineeDAO.update(trainee);

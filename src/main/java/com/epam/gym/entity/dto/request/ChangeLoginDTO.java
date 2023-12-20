@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChangePasswordDTO {
+public class ChangeLoginDTO {
     @NotNull
     Long id;
     @NotNull
