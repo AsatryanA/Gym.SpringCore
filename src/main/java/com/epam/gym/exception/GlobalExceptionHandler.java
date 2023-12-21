@@ -48,11 +48,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>("Something Went Wrong, Please try Later", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(ResourceCreationException.class)
-    public ResponseEntity<String> handleEntityCreationException(ResourceCreationException e) {
-        return new ResponseEntity<>(String.format(e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(VerificationException.class)
     public ResponseEntity<String> handleEntityCreationException(VerificationException e) {
         return new ResponseEntity<>(String.format(e.getMessage()), HttpStatus.FORBIDDEN);

@@ -1,13 +1,13 @@
 package com.epam.gym.service.impl;
 
-import com.epam.gym.dao.TraineeDAO;
-import com.epam.gym.dao.TrainerDAO;
-import com.epam.gym.dao.TrainingDAO;
 import com.epam.gym.entity.Trainee;
 import com.epam.gym.entity.Trainer;
 import com.epam.gym.entity.dto.request.TrainingRequestDTO;
 import com.epam.gym.exception.ResourceNotFoundException;
 import com.epam.gym.mapper.TrainingMapper;
+import com.epam.gym.repository.TraineeRepository;
+import com.epam.gym.repository.TrainerRepository;
+import com.epam.gym.repository.TrainingRepository;
 import com.epam.gym.service.TrainingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,21 +19,21 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TrainingServiceImpl implements TrainingService {
 
-    private final TrainingDAO trainingDAO;
+    private final TrainingRepository trainingRepository;
     private final TrainingMapper trainingMapper;
-    private final TraineeDAO traineeDAO;
-    private final TrainerDAO trainerDAO;
+    private final TraineeRepository traineeRepository;
+    private final TrainerRepository trainerRepository;
 
     @Transactional
     public void create(TrainingRequestDTO trainingRequestDTO) {
         log.info("Creating training: {}", trainingRequestDTO);
         var training = trainingMapper.toTraining(trainingRequestDTO);
-        var trainee = traineeDAO.getById(trainingRequestDTO.getTraineeId())
+        var trainee = traineeRepository.findById(trainingRequestDTO.getTraineeId())
                 .orElseThrow(() -> new ResourceNotFoundException(Trainee.class, trainingRequestDTO.getTraineeId()));
-        var trainer = trainerDAO.getById(trainingRequestDTO.getTrainerId())
+        var trainer = trainerRepository.findById(trainingRequestDTO.getTrainerId())
                 .orElseThrow(() -> new ResourceNotFoundException(Trainer.class, trainingRequestDTO.getTrainerId()));
         training.setTrainee(trainee);
         training.setTrainer(trainer);
-        trainingDAO.create(training);
+        trainingRepository.save(training);
     }
 }

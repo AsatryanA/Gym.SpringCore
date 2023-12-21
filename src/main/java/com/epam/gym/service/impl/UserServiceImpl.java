@@ -1,10 +1,10 @@
 package com.epam.gym.service.impl;
 
-import com.epam.gym.dao.UserDAO;
 import com.epam.gym.entity.User;
 import com.epam.gym.entity.dto.request.ChangeLoginDTO;
 import com.epam.gym.entity.dto.request.LoginDTO;
 import com.epam.gym.exception.ResourceNotFoundException;
+import com.epam.gym.repository.UserRepository;
 import com.epam.gym.service.UserService;
 import com.epam.gym.util.PasswordGenerator;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserDAO userDAO;
+    private final UserRepository userRepository;
     private static final boolean DEFAULT_IS_ACTIVE = true;
 
     @Transactional
@@ -34,25 +34,26 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void login(LoginDTO loginDTO) {
         log.info("Logging in user with username: {}", loginDTO.getUsername());
-        userDAO.login(loginDTO).orElseThrow(() -> new ResourceNotFoundException(User.class, loginDTO.getUsername()));
+        userRepository.findByUsernameAndPassword(loginDTO.getUsername(), loginDTO.getPassword())
+                .orElseThrow(() -> new ResourceNotFoundException(User.class, loginDTO.getUsername()));
     }
 
     @Transactional
     public void changeLogin(ChangeLoginDTO changeLoginDTO) {
         log.info("Changing password for user with id: {}", changeLoginDTO.getId());
-        var user = userDAO.getById(changeLoginDTO.getId())
+        var user = userRepository.findById(changeLoginDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(User.class, changeLoginDTO.getId()));
         if (user.getPassword().equals(changeLoginDTO.getOldPassword())) {
             user.setPassword(changeLoginDTO.getNewPassword());
-            userDAO.update(user).orElseThrow(() -> new ResourceNotFoundException(User.class, user.getId()));
+            userRepository.save(user);
         }
     }
 
     private String generateUsername(String firstName, String lastName) {
         var username = String.format("%s.%s", firstName, lastName);
         int serialNumber = 1;
-        if (userDAO.isUsernameAvailable(username)) {
-            while (userDAO.isUsernameAvailable(username + serialNumber)) {
+        if (userRepository.existsByUsername(username)) {
+            while (userRepository.existsByUsername(username + serialNumber)) {
                 serialNumber++;
             }
             username = username + serialNumber;
@@ -64,4 +65,3 @@ public class UserServiceImpl implements UserService {
         return PasswordGenerator.generateRandomPassword();
     }
 }
-

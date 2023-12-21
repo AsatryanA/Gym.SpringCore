@@ -34,7 +34,7 @@ classes/
 # Compiled Gradle files
 .gradle/
 
-# Local configuration file (e.g., application.properties)
+# Local configuration file (e.g., application.yaml)
 application.properties
 
 # Package Files #
