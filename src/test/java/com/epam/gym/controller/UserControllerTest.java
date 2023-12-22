@@ -1,6 +1,5 @@
 package com.epam.gym.controller;
 
-import com.epam.gym.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,7 +17,7 @@ class UserControllerTest {
     @InjectMocks
     private UserController userController;
     @Mock
-    private UserService userService;
+    private UserServiceTest userService;
 
     private MockMvc mockMvc;
 
@@ -35,6 +34,7 @@ class UserControllerTest {
                         .content("{}"))
                 .andExpect(status().isOk());
     }
+
 
     @Test
     void changePassword() throws Exception {
