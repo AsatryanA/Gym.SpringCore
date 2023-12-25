@@ -22,7 +22,7 @@ public class DatabaseHealthIndicator implements HealthIndicator {
         if (isDatabaseHealthGood()) {
             return Health.up().withDetail(databaseHealthIndicator, "Service is running").build();
         }
-        return Health.up().withDetail(databaseHealthIndicator, "Service is not available").build();
+        return Health.down().withDetail(databaseHealthIndicator, "Service is not available").build();
     }
 
     private boolean isDatabaseHealthGood() {
