@@ -16,7 +16,7 @@ public class LoggerHealthIndicator implements HealthIndicator {
         if (isLoggerHealthGood()) {
             return Health.up().withDetail(loggerHealthIndicator, "Service is running").build();
         }
-        return Health.up().withDetail(loggerHealthIndicator, "Service is not available").build();
+        return Health.down().withDetail(loggerHealthIndicator, "Service is not available").build();
     }
 
     private boolean isLoggerHealthGood() {

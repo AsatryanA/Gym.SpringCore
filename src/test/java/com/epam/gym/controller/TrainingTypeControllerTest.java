@@ -1,5 +1,6 @@
 package com.epam.gym.controller;
 
+import com.epam.gym.service.TrainingTypeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,7 +19,7 @@ class TrainingTypeControllerTest {
     private TrainingTypeController trainingTypeController;
 
     @Mock
-    private TrainingTypeServiceTest trainingTypeService;
+    private TrainingTypeService trainingTypeService;
 
     private MockMvc mockMvc;
 

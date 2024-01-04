@@ -1,9 +1,10 @@
 package com.epam.gym.controller;
 
-import com.epam.gym.entity.TrainingType;
-import com.epam.gym.entity.dto.request.ToggleActiveDTO;
-import com.epam.gym.entity.dto.request.TrainerRequestDTO;
-import com.epam.gym.entity.dto.request.TrainerUpdateDTO;
+import com.epam.gym.model.TrainingType;
+import com.epam.gym.model.dto.request.ToggleActiveDTO;
+import com.epam.gym.model.dto.request.TrainerRequestDTO;
+import com.epam.gym.model.dto.request.TrainerUpdateDTO;
+import com.epam.gym.service.TrainerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TrainerControllerTest {
 
     @Mock
-    private TrainerServiceTest trainerService;
+    private TrainerService trainerService;
 
     @InjectMocks
     private TrainerController trainerController;

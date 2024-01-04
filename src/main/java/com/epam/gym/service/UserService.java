@@ -1,15 +1,7 @@
 package com.epam.gym.service;
 
-import com.epam.gym.entity.User;
-import com.epam.gym.entity.dto.request.ChangeLoginDTO;
-import com.epam.gym.entity.dto.request.LoginDTO;
+import com.epam.gym.model.dto.response.UserResponseDTO;
 
 public interface UserService {
-    User create(String firstName, String lastName);
-
-    void login(LoginDTO loginDTO);
-
-    void changeLogin(ChangeLoginDTO changeLoginDTO);
-
-
+    UserResponseDTO create(String firstName, String lastName);
 }

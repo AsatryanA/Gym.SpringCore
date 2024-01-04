@@ -1,8 +1,8 @@
 package com.epam.gym.service.impl;
 
-import com.epam.gym.entity.Trainee;
-import com.epam.gym.entity.Trainer;
-import com.epam.gym.entity.dto.request.TrainingRequestDTO;
+import com.epam.gym.model.Trainee;
+import com.epam.gym.model.Trainer;
+import com.epam.gym.model.dto.request.TrainingRequestDTO;
 import com.epam.gym.exception.ResourceNotFoundException;
 import com.epam.gym.mapper.TrainingMapper;
 import com.epam.gym.repository.TraineeRepository;
@@ -26,7 +26,6 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Transactional
     public void create(TrainingRequestDTO trainingRequestDTO) {
-        log.info("Creating training: {}", trainingRequestDTO);
         var training = trainingMapper.toTraining(trainingRequestDTO);
         var trainee = traineeRepository.findById(trainingRequestDTO.getTraineeId())
                 .orElseThrow(() -> new ResourceNotFoundException(Trainee.class, trainingRequestDTO.getTraineeId()));

@@ -18,7 +18,7 @@ class TraineeServiceImplTest {
     @Mock
     private TraineeRepository traineeRepository;
     @Mock
-    private UserServiceImpl userServiceImpl;
+    private AuthServiceImpl userServiceImpl;
     @Mock
     private TrainerServiceImpl trainerServiceImpl;
     @Mock

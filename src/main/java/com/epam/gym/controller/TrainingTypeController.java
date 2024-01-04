@@ -1,6 +1,6 @@
 package com.epam.gym.controller;
 
-import com.epam.gym.entity.dto.response.TrainingTypeResponseDTO;
+import com.epam.gym.model.dto.response.TrainingTypeResponseDTO;
 import com.epam.gym.service.TrainingTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -22,8 +22,8 @@ public class TrainingTypeController {
     private final TrainingTypeService trainingTypeService;
 
     @GetMapping
-    ResponseEntity<List<TrainingTypeResponseDTO>> getAll(@RequestParam @Positive Integer size,
-                                                         @RequestParam Integer page) {
+    ResponseEntity<List<TrainingTypeResponseDTO>> getAll(@RequestParam(required = false, defaultValue = "5") @Positive Integer size,
+                                                         @RequestParam(required = false, defaultValue = "0") Integer page) {
         return new ResponseEntity<>(trainingTypeService.getAll(Pageable.ofSize(size).withPage(page)), HttpStatus.OK);
     }
 }

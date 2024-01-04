@@ -1,12 +1,12 @@
 package com.epam.gym.service;
 
-import com.epam.gym.entity.Trainer;
-import com.epam.gym.entity.dto.request.ToggleActiveDTO;
-import com.epam.gym.entity.dto.request.TrainerRequestDTO;
-import com.epam.gym.entity.dto.request.TrainerUpdateDTO;
-import com.epam.gym.entity.dto.response.TrainerCreateResponseDTO;
-import com.epam.gym.entity.dto.response.TrainerResponseDTO;
-import com.epam.gym.entity.dto.response.TrainerTrainingDTO;
+import com.epam.gym.model.Trainer;
+import com.epam.gym.model.dto.request.ToggleActiveDTO;
+import com.epam.gym.model.dto.request.TrainerRequestDTO;
+import com.epam.gym.model.dto.request.TrainerUpdateDTO;
+import com.epam.gym.model.dto.response.TrainerCreateResponseDTO;
+import com.epam.gym.model.dto.response.TrainerResponseDTO;
+import com.epam.gym.model.dto.response.TrainerTrainingDTO;
 
 import java.util.List;
 

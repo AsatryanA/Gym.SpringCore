@@ -1,9 +1,9 @@
 package com.epam.gym.mapper;
 
-import com.epam.gym.entity.Training;
-import com.epam.gym.entity.dto.request.TrainingRequestDTO;
-import com.epam.gym.entity.dto.response.TraineeTrainingDTO;
-import com.epam.gym.entity.dto.response.TrainerTrainingDTO;
+import com.epam.gym.model.Training;
+import com.epam.gym.model.dto.request.TrainingRequestDTO;
+import com.epam.gym.model.dto.response.TraineeTrainingDTO;
+import com.epam.gym.model.dto.response.TrainerTrainingDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

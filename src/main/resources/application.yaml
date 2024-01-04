@@ -19,3 +19,7 @@ management:
     export:
       prometheus:
         enabled: true
+
+jwt:
+  secret: secret
+  expiration: 86400000

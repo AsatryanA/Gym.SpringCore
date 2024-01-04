@@ -1,7 +1,7 @@
 package com.epam.gym.service.impl;
 
-import com.epam.gym.entity.TrainingType;
-import com.epam.gym.entity.dto.response.TrainingTypeResponseDTO;
+import com.epam.gym.model.TrainingType;
+import com.epam.gym.model.dto.response.TrainingTypeResponseDTO;
 import com.epam.gym.exception.ResourceNotFoundException;
 import com.epam.gym.mapper.TrainingTypeMapper;
 import com.epam.gym.repository.TrainingTypeRepository;
@@ -24,7 +24,6 @@ public class TrainingTypeServiceImpl implements TrainingTypeService {
 
     @Transactional
     public List<TrainingTypeResponseDTO> getAll(Pageable pageable) {
-        log.info("Getting all training types");
         return trainingTypeRepository.findAll(pageable).stream().map(trainingTypeMapper::toTrainingTypeResponseDto).toList();
     }
 

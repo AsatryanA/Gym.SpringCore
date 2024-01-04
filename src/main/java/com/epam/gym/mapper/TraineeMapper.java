@@ -1,12 +1,12 @@
 package com.epam.gym.mapper;
 
-import com.epam.gym.entity.Trainee;
-import com.epam.gym.entity.Trainer;
-import com.epam.gym.entity.User;
-import com.epam.gym.entity.dto.request.TraineeRequestDTO;
-import com.epam.gym.entity.dto.response.TraineeCreateResponseDTO;
-import com.epam.gym.entity.dto.response.TraineeResponseDTO;
-import com.epam.gym.entity.dto.response.TraineeTrainersResponseDTO;
+import com.epam.gym.model.Trainee;
+import com.epam.gym.model.Trainer;
+import com.epam.gym.model.User;
+import com.epam.gym.model.dto.request.TraineeRequestDTO;
+import com.epam.gym.model.dto.response.TraineeCreateResponseDTO;
+import com.epam.gym.model.dto.response.TraineeResponseDTO;
+import com.epam.gym.model.dto.response.TraineeTrainersResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +33,6 @@ public class TraineeMapper {
     public TraineeCreateResponseDTO toTraineeCreateResponseDTO(Trainee trainee) {
         return TraineeCreateResponseDTO.builder()
                 .id(trainee.getId())
-                .password(trainee.getUser().getPassword())
                 .username(trainee.getUser().getUsername())
                 .build();
     }

@@ -1,6 +1,6 @@
 package com.epam.gym.controller;
 
-import com.epam.gym.entity.dto.request.TrainingRequestDTO;
+import com.epam.gym.model.dto.request.TrainingRequestDTO;
 import com.epam.gym.service.TrainingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,8 +1,8 @@
 package com.epam.gym.repository;
 
-import com.epam.gym.entity.Trainer;
-import com.epam.gym.entity.TrainingType;
-import com.epam.gym.entity.User;
+import com.epam.gym.model.Trainer;
+import com.epam.gym.model.TrainingType;
+import com.epam.gym.model.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

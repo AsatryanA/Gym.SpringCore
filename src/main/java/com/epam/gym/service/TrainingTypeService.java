@@ -1,7 +1,7 @@
 package com.epam.gym.service;
 
-import com.epam.gym.entity.TrainingType;
-import com.epam.gym.entity.dto.response.TrainingTypeResponseDTO;
+import com.epam.gym.model.TrainingType;
+import com.epam.gym.model.dto.response.TrainingTypeResponseDTO;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

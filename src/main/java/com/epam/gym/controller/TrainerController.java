@@ -1,11 +1,11 @@
 package com.epam.gym.controller;
 
-import com.epam.gym.entity.dto.request.ToggleActiveDTO;
-import com.epam.gym.entity.dto.request.TrainerRequestDTO;
-import com.epam.gym.entity.dto.request.TrainerUpdateDTO;
-import com.epam.gym.entity.dto.response.TrainerCreateResponseDTO;
-import com.epam.gym.entity.dto.response.TrainerResponseDTO;
-import com.epam.gym.entity.dto.response.TrainerTrainingDTO;
+import com.epam.gym.model.dto.request.ToggleActiveDTO;
+import com.epam.gym.model.dto.request.TrainerRequestDTO;
+import com.epam.gym.model.dto.request.TrainerUpdateDTO;
+import com.epam.gym.model.dto.response.TrainerCreateResponseDTO;
+import com.epam.gym.model.dto.response.TrainerResponseDTO;
+import com.epam.gym.model.dto.response.TrainerTrainingDTO;
 import com.epam.gym.service.TrainerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

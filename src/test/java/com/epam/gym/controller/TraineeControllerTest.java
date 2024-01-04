@@ -1,9 +1,9 @@
-/*
 package com.epam.gym.controller;
 
-import com.epam.gym.entity.dto.request.ToggleActiveDTO;
-import com.epam.gym.entity.dto.request.TraineeRequestDTO;
-import com.epam.gym.entity.dto.request.TraineeUpdateDTO;
+import com.epam.gym.model.dto.request.ToggleActiveDTO;
+import com.epam.gym.model.dto.request.TraineeRequestDTO;
+import com.epam.gym.model.dto.request.TraineeUpdateDTO;
+import com.epam.gym.service.TraineeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ import java.util.List;
 class TraineeControllerTest {
 
     @Mock
-    private TraineeServiceTest traineeService;
+    private TraineeService traineeService;
 
     @InjectMocks
     private TraineeController traineeController;
@@ -96,4 +96,3 @@ class TraineeControllerTest {
         return TraineeRequestDTO.builder().address("Address").firstName("John").lastName("Doe").dateOfBirth(LocalDate.of(2000, 10, 10)).build();
     }
 }
-*/
