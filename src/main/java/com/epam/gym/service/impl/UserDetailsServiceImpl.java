@@ -21,9 +21,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (loginAttemptService.isBlocked()) {
-            throw new VerificationException("Your account has been blocked due to multiple incorrect login attempts. " +
-                    "Please try after 5 minutes");
+        if (loginAttemptService.isBlocked(username)) {
+            throw new VerificationException("blocked");
         }
         var user = userRepository.findByUsername(username)
                 .orElseThrow(() ->

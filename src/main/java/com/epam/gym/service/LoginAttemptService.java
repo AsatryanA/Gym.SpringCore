@@ -1,7 +1,7 @@
 package com.epam.gym.service;
 
 public interface LoginAttemptService {
-    void loginFailed(String key);
+    void loginFailed(String username);
 
-    boolean isBlocked();
+    boolean isBlocked(String username);
 }

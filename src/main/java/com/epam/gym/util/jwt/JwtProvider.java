@@ -6,7 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,18 +49,14 @@ public class JwtProvider {
     }
 
     public boolean validateJwtTokenSignature(String authToken) {
-        try {
-            if (isBlacklisted(authToken)) {
-                throw new AuthenticationCredentialsNotFoundException("Token has been revoked");
-            }
-            Jwts
-                    .parser()
-                    .setSigningKey(jwtSecret)
-                    .parseClaimsJws(authToken);
-            return true;
-        } catch (Exception e) {
-            throw new AuthenticationCredentialsNotFoundException("JWT was expired or incorrect: ");
+        if (isBlacklisted(authToken)) {
+            throw new AccessDeniedException("Token has been revoked");
         }
+        Jwts
+                .parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(authToken);
+        return true;
     }
 
     public String getToken(HttpServletRequest request) {

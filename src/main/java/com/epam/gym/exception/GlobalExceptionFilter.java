@@ -1,5 +1,7 @@
 package com.epam.gym.exception;
 
+import io.jsonwebtoken.JwtException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -15,8 +17,11 @@ public class GlobalExceptionFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        } catch (Exception ex) {
+        } catch (AccessDeniedException ex) {
             response.getWriter().write(ex.getMessage());
+            response.setStatus(403);
+        } catch (JwtException e) {
+            response.getWriter().write("JWT was expired or incorrect");
             response.setStatus(403);
         }
     }
