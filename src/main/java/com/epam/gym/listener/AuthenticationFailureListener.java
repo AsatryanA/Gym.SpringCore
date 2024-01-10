@@ -14,8 +14,8 @@ public class AuthenticationFailureListener implements
     private final LoginAttemptService loginAttemptService;
 
     @Override
-    public void onApplicationEvent(AuthenticationFailureBadCredentialsEvent e) {
-        String username = (String) e.getAuthentication().getPrincipal();
+    public void onApplicationEvent(AuthenticationFailureBadCredentialsEvent event) {
+        var username = (String) event.getAuthentication().getPrincipal();
         loginAttemptService.loginFailed(username);
     }
 }
